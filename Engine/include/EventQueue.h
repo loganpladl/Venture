@@ -5,8 +5,6 @@
 #include <list>
 
 namespace Venture {
-	
-
 	class EventQueue {
 	private:
 		static const int MAX_EVENTS = 256;

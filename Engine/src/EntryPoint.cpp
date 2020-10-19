@@ -5,6 +5,9 @@
 #include "../include/EventQueue.h"
 #include "../include/Input.h"
 
+#include "../include/FileSystem.h"
+#include <thread>
+
 using namespace Venture;
 
 int CALLBACK WinMain(
@@ -21,6 +24,9 @@ int CALLBACK WinMain(
 	MSG msg;
 	msg.message = WM_NULL;
 	PeekMessage(&msg, NULL, 0U, 0U, PM_NOREMOVE);
+	
+	// Create thread for asynchronous file IO
+	std::thread fileThread(FileSystem::ProcessRequests);
 
 	Venture::Log::openLogFiles();
 	EventQueue::Init();
@@ -42,7 +48,9 @@ int CALLBACK WinMain(
 		}
 	}
 
-
 	Venture::Log::closeLogFiles();
 
+	FileSystem::Terminate();
+	fileThread.join();
+	return 0;
 }
