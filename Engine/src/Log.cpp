@@ -1,4 +1,5 @@
 #include "../include/Log.h"
+#include "../include/FileSystem.h"
 
 namespace Venture {
 	namespace Log {
@@ -39,7 +40,7 @@ namespace Venture {
 
 		int openLogFiles() {
 			if (_mkdir("log") == 0) {
-				DebugPrintF(0, Channel::Log, "Directory created\n");
+				DebugPrintF(0, Channel::Files, "Directory created\n");
 			}
 			for (int i = 0; i < NUM_CHANNELS; i++) {
 				char path[100];
@@ -47,7 +48,7 @@ namespace Venture {
 				errno_t err = fopen_s(&logFiles[i], path, "w+");
 				// File failed to open
 				if (err != 0) {
-					DebugPrintF(0, Channel::Log, "Cannot open file %s\n", path);
+					DebugPrintF(0, Channel::Files, "Cannot open file %s\n", path);
 					return -1;
 				}
 			}

@@ -9,11 +9,12 @@ namespace Venture {
 		static std::atomic<bool> processing;
 	public:
 		// Functions to create requests and add to the queue
-		static File::AsyncOpenRequest* AsyncOpenFile(std::string path, void (*func)() = [](){});
-		static File::AsyncReadRequest* AsyncReadFile(File::AsyncFile file, char* inputBuffer, size_t bufferSize, void (*func)() = [](){});
-		static File::AsyncWriteRequest* AsyncWriteFile(File::AsyncFile file, char* outputBuffer, size_t bufferSize, void (*func)() = [](){});
-		static File::AsyncCloseRequest* AsyncCloseFile(File::AsyncFile file, void (*func)() = [](){});
+		static File::AsyncOpenRequest* AsyncOpenFile(std::string path, std::string mode, void (*func)() = [](){});
+		static File::AsyncReadRequest* AsyncReadFile(int fileHandle, char* inputBuffer, size_t bufferSize, void (*func)() = [](){});
+		static File::AsyncWriteRequest* AsyncWriteFile(int fileHandle, char* outputBuffer, size_t bufferSize, void (*func)() = [](){});
+		static File::AsyncCloseRequest* AsyncCloseFile(int fileHandle, void (*func)() = [](){});
 		static void ProcessRequests();
 		static void Terminate();
+		static void Wait(File::AsyncRequest*);
 	};
 }

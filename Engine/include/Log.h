@@ -18,7 +18,7 @@ namespace Venture {
 			Resources,
 			Input,
 			Audio,
-			Log
+			Files
 		};
 
 		// Channel names indexed by enum value

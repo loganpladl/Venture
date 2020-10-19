@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string>
 #include <thread>
-#include "../include/Semaphore.h"
+#include "Semaphore.h"
 
 namespace Venture {
 	namespace File {
@@ -10,9 +10,16 @@ namespace Venture {
 			Invalid, Read, Write, Open, Close
 		};
 
-		struct AsyncFile {
-			FILE* pFile;
-		};
+		extern const int MAX_FILES;
+		extern FILE* openFiles[];
+		extern bool fileHandlesInUse[];
+
+		FILE* getFile(int handle);
+
+		// Search open files array for first unused handle
+		int newFileHandle();
+
+		void deleteFile(int handle);
 
 		class AsyncRequest {
 		protected:
@@ -25,49 +32,55 @@ namespace Venture {
 			inline virtual AsyncRequestType GetType() {
 				return m_type;
 			}
-			virtual void ProcessRequest() = 0;
+			virtual int ProcessRequest() = 0;
 		};
 
 		class AsyncOpenRequest : public AsyncRequest {
 		private:
 			std::string m_path;
-			AsyncFile* m_filePointer; // file pointer destination
+			int m_fileHandle;
+			std::string m_mode;
 		public:
 			// Empty lambda function as default callback
-			AsyncOpenRequest(std::string path, void (*callback)() = []() {}) :
-				AsyncRequest(AsyncRequestType::Open, callback), m_path(path) {}
-			void ProcessRequest();
+			AsyncOpenRequest(std::string path, std::string mode, void (*callback)() = []() {}) :
+				AsyncRequest(AsyncRequestType::Open, callback), m_path(path), m_mode(mode) {
+				m_fileHandle = newFileHandle();
+			}
+			int ProcessRequest() override;
+			inline int getFileHandle() {
+				return m_fileHandle;
+			}
 		};
 
 		struct AsyncReadRequest : public AsyncRequest {
-			AsyncFile m_file;
+			int m_fileHandle;
 			char* m_inputBuffer;
 			size_t m_bufferSize;
 
 			// Empty lambda as default callback
-			AsyncReadRequest(AsyncFile file, char* inputBuffer, size_t bufferSize, void (*callback)() = [](){}) :
-				AsyncRequest(AsyncRequestType::Read, callback), m_file(file), m_inputBuffer(inputBuffer), m_bufferSize(bufferSize) {}
-			void ProcessRequest();
+			AsyncReadRequest(int fileHandle, char* inputBuffer, size_t bufferSize, void (*callback)() = [](){}) :
+				AsyncRequest(AsyncRequestType::Read, callback), m_fileHandle(fileHandle), m_inputBuffer(inputBuffer), m_bufferSize(bufferSize) {}
+			int ProcessRequest() override;
 		};
 
 		struct AsyncWriteRequest : public AsyncRequest {
-			AsyncFile m_file;
+			int m_fileHandle;
 			char* m_outputBuffer;
 			size_t m_bufferSize;
 
 			// Empty lambda as default callback
-			AsyncWriteRequest(AsyncFile file, char* inputBuffer, size_t bufferSize, void (*callback)() = []() {}) :
-				AsyncRequest(AsyncRequestType::Read, callback), m_file(file), m_outputBuffer(inputBuffer), m_bufferSize(bufferSize) {}
-			void ProcessRequest();
+			AsyncWriteRequest(int fileHandle, char* inputBuffer, size_t bufferSize, void (*callback)() = []() {}) :
+				AsyncRequest(AsyncRequestType::Read, callback), m_fileHandle(fileHandle), m_outputBuffer(inputBuffer), m_bufferSize(bufferSize) {}
+			int ProcessRequest() override;
 		};
 
 		struct AsyncCloseRequest : public AsyncRequest {
-			AsyncFile m_file;
+			int m_fileHandle;
 
 			// Empty lambda function as default callback
-			AsyncCloseRequest(AsyncFile file, void (*callback)() = []() {}) :
-				AsyncRequest(AsyncRequestType::Open, callback), m_file(file) {}
-			void ProcessRequest();
+			AsyncCloseRequest(int fileHandle, void (*callback)() = []() {}) :
+				AsyncRequest(AsyncRequestType::Open, callback), m_fileHandle(fileHandle) {}
+			int ProcessRequest() override;
 		};
 	}
 }
