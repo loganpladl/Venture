@@ -1,5 +1,6 @@
 #pragma once
 #include "File.h"
+#include <mutex>
 
 namespace Venture {
 	class FileQueue {
@@ -8,6 +9,7 @@ namespace Venture {
 		static const int MAX_REQUESTS = 256;
 		static File::AsyncRequest* queue[MAX_REQUESTS];
 		static int head, tail;
+		static std::mutex mutex;
 	public:
 		static void Init();
 		static int Enqueue(File::AsyncRequest* request);

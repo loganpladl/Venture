@@ -34,7 +34,9 @@ namespace Venture {
 				return m_type;
 			}
 			virtual int ProcessRequest() = 0;
-			virtual void Callback() { m_callback(); }
+			void Callback() { m_callback(); }
+			void Signal() { sem.Signal(); }
+			void Wait() { sem.Wait(); }
 		};
 
 		class AsyncOpenRequest : public AsyncRequest {

@@ -17,6 +17,5 @@ namespace Venture {
 		static File::AsyncCloseRequest* AsyncCloseFile(int fileHandle, void (*func)() = [](){});
 		static void ProcessRequests();
 		static void Terminate();
-		static void Wait(File::AsyncRequest*);
 	};
 }

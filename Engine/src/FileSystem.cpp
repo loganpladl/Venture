@@ -42,6 +42,7 @@ namespace Venture {
 			while (File::AsyncRequest* request = FileQueue::Dequeue()) {
 				request->ProcessRequest();
 				request->Callback();
+				request->Signal();
 			}
 		}
 	}
