@@ -1,5 +1,6 @@
 #include "../include/Log.h"
 #include "../include/FileSystem.h"
+#include "../include/Buffer.h"
 
 namespace Venture {
 	namespace Log {
@@ -23,7 +24,7 @@ namespace Venture {
 		const int NUM_CHANNELS = 8;
 		const char* LOG_PATH = "log\\";
 
-		FILE* logFiles[NUM_CHANNELS];
+		int logFileHandles[NUM_CHANNELS];
 
 		void EnableChannel(Channel channel) {
 			g_activeChannels |= 1 << channel;
@@ -45,20 +46,17 @@ namespace Venture {
 			for (int i = 0; i < NUM_CHANNELS; i++) {
 				char path[100];
 				getLogFilePath(path, CHANNEL_NAMES[i]);
-				errno_t err = fopen_s(&logFiles[i], path, "w+");
-				// File failed to open
-				if (err != 0) {
-					DebugPrintF(0, Channel::Files, "Cannot open file %s\n", path);
-					return -1;
-				}
+
+				File::AsyncOpenRequest* request = FileSystem::AsyncOpenFile(path, "w+");
+				logFileHandles[i] = request->getFileHandle();
 			}
 			return 0;
 		}
 
 		int closeLogFiles() {
 			for (int i = 0; i < NUM_CHANNELS; i++) {
-				if (logFiles[i] != nullptr) {
-					fclose(logFiles[i]);
+				if (logFileHandles[i] >= 0) {
+					File::AsyncCloseRequest* request = FileSystem::AsyncCloseFile(logFileHandles[i]);
 				}
 			}
 			return 0;
@@ -66,22 +64,22 @@ namespace Venture {
 
 		int DebugPrintF(int verbosity, Channel channel, const char* format, ...) {
 			const int MAX_CHARS = 1024;
-			static char buffer[MAX_CHARS];
+			Buffer buffer(MAX_CHARS);
 
 			va_list argList;
 
 			va_start(argList, format);
-			int charsWritten = vsnprintf(buffer, MAX_CHARS, format, argList);
+			int charsWritten = vsnprintf(buffer.GetBuffer(), MAX_CHARS, format, argList);
 			va_end(argList);
 
 			// Print to file depending on channel
-			if (logFiles[channel] != nullptr) {
-				fputs(buffer, logFiles[channel]);
+			if (logFileHandles[channel] >= 0) {
+				File::AsyncWriteRequest* request = FileSystem::AsyncWriteFile(logFileHandles[channel], buffer, MAX_CHARS);
 			}
 
 			// Only print to console when global verbosity level is high enough and channel is active
 			if (g_verbosity >= verbosity && isChannelActive(channel)) {
-				OutputDebugStringA(buffer);
+				OutputDebugStringA(buffer.GetBuffer());
 			}
 			return 0;
 		}

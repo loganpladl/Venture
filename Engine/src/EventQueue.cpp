@@ -12,7 +12,7 @@ namespace Venture {
 	}
 	int EventQueue::Enqueue(Event* event) {
 		// Check if queue is full
-		if ((head + 1) % MAX_EVENTS == tail) {
+		if ((tail + 1) % MAX_EVENTS == head) {
 			// Failure
 			return -1;
 		}

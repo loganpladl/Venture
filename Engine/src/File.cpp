@@ -26,6 +26,7 @@ namespace Venture {
 
 		void deleteFile(int handle) {
 			// delete file w/ fclose
+			fclose(openFiles[handle]);
 			fileHandlesInUse[handle] = false;
 		}
 
@@ -41,15 +42,51 @@ namespace Venture {
 		}
 
 		int AsyncReadRequest::ProcessRequest() {
+			size_t bytesRead = fread(m_inputBuffer.GetBuffer(), 1, m_bufferSize, openFiles[m_fileHandle]);
+
+			if (bytesRead != m_bufferSize) {
+				// Read error
+				Log::DebugPrintF(0, Log::Channel::Files, "Reading error.\n");
+				return -1;
+			}
+
 			return 0;
 		}
 
 		int AsyncWriteRequest::ProcessRequest() {
+			size_t charsWritten = fwrite(m_outputBuffer.GetBuffer(), sizeof(char), m_bufferSize, openFiles[m_fileHandle]);
 			return 0;
 		}
 
 		int AsyncCloseRequest::ProcessRequest() {
 			deleteFile(m_fileHandle);
+			return 0;
+		}
+
+		int AsyncReadFullRequest::ProcessRequest() {
+			// Find file size
+			FILE* fp = openFiles[m_fileHandle];
+			fseek(fp, 0, SEEK_END);
+			long fileSize = ftell(fp);
+			rewind(fp);
+
+			m_inputBuffer.Create(fileSize);
+
+			if (m_inputBuffer.GetBuffer() == NULL) {
+				Log::DebugPrintF(0, Log::Channel::Files, "Memory error when allocating buffer to read full file.\n");
+				return -1;
+			}
+
+			m_bufferSize = fileSize;
+
+			size_t bytesRead = fread(m_inputBuffer.GetBuffer() , 1, m_bufferSize, fp);
+
+			if (bytesRead != m_bufferSize) {
+				// Read error
+				Log::DebugPrintF(0, Log::Channel::Files, "Reading error.\n");
+				return -1;
+			}
+
 			return 0;
 		}
 	}

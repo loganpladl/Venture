@@ -27,7 +27,7 @@ namespace Venture {
 		extern const int NUM_CHANNELS;
 		extern const char* LOG_PATH;
 
-		extern FILE* logFiles[];
+		extern int logFileHandles[];
 
 		const char* getLogFilePath(const char* name);
 

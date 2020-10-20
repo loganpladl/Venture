@@ -11,7 +11,7 @@ namespace Venture {
 	}
 	int FileQueue::Enqueue(File::AsyncRequest* request) {
 		// Check if queue is full
-		if ((head + 1) % MAX_REQUESTS == tail) {
+		if ((tail + 1) % MAX_REQUESTS == head) {
 			// Failure
 			return -1;
 		}

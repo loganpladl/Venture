@@ -3,11 +3,12 @@
 #include <string>
 #include <thread>
 #include "Semaphore.h"
+#include "Buffer.h"
 
 namespace Venture {
 	namespace File {
 		enum class AsyncRequestType {
-			Invalid, Read, Write, Open, Close
+			Invalid, Read, Write, Open, Close, ReadFull
 		};
 
 		extern const int MAX_FILES;
@@ -33,6 +34,7 @@ namespace Venture {
 				return m_type;
 			}
 			virtual int ProcessRequest() = 0;
+			virtual void Callback() { m_callback(); }
 		};
 
 		class AsyncOpenRequest : public AsyncRequest {
@@ -52,24 +54,41 @@ namespace Venture {
 			}
 		};
 
+		// Read specified bytes from a file
 		struct AsyncReadRequest : public AsyncRequest {
 			int m_fileHandle;
-			char* m_inputBuffer;
+			// Predefined buffer and size given as input
+			Buffer& m_inputBuffer;
 			size_t m_bufferSize;
 
 			// Empty lambda as default callback
-			AsyncReadRequest(int fileHandle, char* inputBuffer, size_t bufferSize, void (*callback)() = [](){}) :
+			AsyncReadRequest(int fileHandle, Buffer& inputBuffer, size_t bufferSize, void (*callback)() = [](){}) :
 				AsyncRequest(AsyncRequestType::Read, callback), m_fileHandle(fileHandle), m_inputBuffer(inputBuffer), m_bufferSize(bufferSize) {}
+			int ProcessRequest() override;
+		};
+
+		// Read an entire file
+		struct AsyncReadFullRequest : public AsyncRequest {
+			int m_fileHandle;
+			// Initially null buffer to be allocated when request is processed
+			Buffer& m_inputBuffer;
+			// Initially zero, set when processed
+			size_t m_bufferSize;
+
+			AsyncReadFullRequest(int fileHandle, Buffer& inputBuffer, void (*callback)() = []() {}) :
+				AsyncRequest(AsyncRequestType::ReadFull, callback), m_fileHandle(fileHandle), m_inputBuffer(inputBuffer) {
+				m_bufferSize = 0;
+			}
 			int ProcessRequest() override;
 		};
 
 		struct AsyncWriteRequest : public AsyncRequest {
 			int m_fileHandle;
-			char* m_outputBuffer;
+			Buffer& m_outputBuffer;
 			size_t m_bufferSize;
 
 			// Empty lambda as default callback
-			AsyncWriteRequest(int fileHandle, char* inputBuffer, size_t bufferSize, void (*callback)() = []() {}) :
+			AsyncWriteRequest(int fileHandle, Buffer& inputBuffer, size_t bufferSize, void (*callback)() = []() {}) :
 				AsyncRequest(AsyncRequestType::Read, callback), m_fileHandle(fileHandle), m_outputBuffer(inputBuffer), m_bufferSize(bufferSize) {}
 			int ProcessRequest() override;
 		};

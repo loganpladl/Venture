@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Buffer.cpp" />
     <ClCompile Include="src\Direct3DManager.cpp" />
     <ClCompile Include="src\EntryPoint.cpp" />
     <ClCompile Include="src\EventQueue.cpp" />
@@ -155,11 +156,11 @@
     <ClCompile Include="src\FileSystem.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\Log.cpp" />
-    <ClCompile Include="src\LogFile.cpp" />
     <ClCompile Include="src\RenderManager.cpp" />
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Buffer.h" />
     <ClInclude Include="include\Direct3DManager.h" />
     <ClInclude Include="include\Event.h" />
     <ClInclude Include="include\EventHandler.h" />
@@ -170,7 +171,6 @@
     <ClInclude Include="include\Input.h" />
     <ClInclude Include="include\KeyEvent.h" />
     <ClInclude Include="include\Log.h" />
-    <ClInclude Include="include\LogFile.h" />
     <ClInclude Include="include\RenderManager.h" />
     <ClInclude Include="include\Semaphore.h" />
     <ClInclude Include="include\Window.h" />
