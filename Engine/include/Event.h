@@ -3,9 +3,18 @@
 namespace Venture {
 	enum EventType {
 		KeyPressed,
-		KeyReleased
+		KeyReleased,
+		MouseMove,
+		LeftMousePressed,
+		LeftMouseReleased,
+		RightMousePressed,
+		RightMouseReleased,
+		MiddleMousePressed,
+		MiddleMouseReleased,
+		MouseScrollUp,
+		MouseScrollDown
 	};
-	const int NUM_EVENT_TYPES = 2;
+	const int NUM_EVENT_TYPES = 11;
 
 	class Event {
 	protected:

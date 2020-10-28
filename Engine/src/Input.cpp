@@ -19,10 +19,13 @@ namespace Venture {
 	void Input::Init() {
 		EventQueue::RegisterHandler(&keyPressedHandler, KeyPressed);
 		EventQueue::RegisterHandler(&keyReleasedHandler, KeyReleased);
+		Mouse::Init();
 	}
 
+	// Initialize statics
 	Input::KeyPressedEventHandler Input::keyPressedHandler;
 	Input::KeyReleasedEventHandler Input::keyReleasedHandler;
+	// Initialize all to false
 	bool Input::buttonStates[DownArrow + 1] = { false };
 
 	Input::KeyCode Input::ConvertWindowsKeyCode(int keyCode) {

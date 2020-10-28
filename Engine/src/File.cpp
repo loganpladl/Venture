@@ -4,7 +4,7 @@
 namespace Venture {
 	namespace File {
 		// Define externs
-		const int MAX_FILES = 1024;
+		const int MAX_FILES = 4096;
 		FILE* openFiles[MAX_FILES];
 		bool fileHandlesInUse[MAX_FILES];
 
@@ -54,7 +54,8 @@ namespace Venture {
 		}
 
 		int AsyncWriteRequest::ProcessRequest() {
-			size_t charsWritten = fwrite(m_outputBuffer.GetBuffer(), sizeof(char), m_bufferSize, openFiles[m_fileHandle]);
+			char* buf = m_outputBuffer.GetBuffer();
+			size_t charsWritten = fwrite(buf, sizeof(char), m_bufferSize, openFiles[m_fileHandle]);
 			return 0;
 		}
 

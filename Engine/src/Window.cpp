@@ -98,6 +98,10 @@ namespace Venture {
 				//UnregisterClass
 				break;
 			}
+			case WM_KILLFOCUS: {
+				// clear pressed keystates
+				break;
+			}
 			case WM_DESTROY: {
 				PostQuitMessage(0);
 				break;
@@ -105,7 +109,9 @@ namespace Venture {
 			case WM_ACTIVATEAPP: {
 				break;
 			}
-			case WM_KEYDOWN: {
+			case WM_KEYDOWN:
+			// WM_SYSKEYDOWN is needed for ALT key and other system keys
+			case WM_SYSKEYDOWN: {
 				Input::KeyCode keyCode = Input::ConvertWindowsKeyCode((int)wParam);
 				// Only create events for relevant keycodes and eliminate repeats
 				int prevState = lParam & 0x40000000;
@@ -115,11 +121,69 @@ namespace Venture {
 				}
 				break;
 			}
-			case WM_KEYUP: {
+			case WM_KEYUP:
+			case WM_SYSKEYUP: {
 				Input::KeyCode keyCode = Input::ConvertWindowsKeyCode((int)wParam);
 				// Only create events for relevant keycodes
 				if (keyCode != Input::Unassigned) {
 					KeyReleasedEvent* event = new KeyReleasedEvent(keyCode);
+					EventQueue::Enqueue(event);
+				}
+				break;
+			}
+			case WM_CHAR: {
+				// Text input
+			}
+			case WM_MOUSEMOVE: {
+				const POINTS point = MAKEPOINTS(lParam);
+				MouseMoveEvent* event = new MouseMoveEvent(point.x, point.y);
+				EventQueue::Enqueue(event);
+				break;
+			}
+			case WM_LBUTTONDOWN: {
+				const POINTS point = MAKEPOINTS(lParam);
+				LeftMousePressedEvent* event = new LeftMousePressedEvent(point.x, point.y);
+				EventQueue::Enqueue(event);
+				break;
+			}
+			case WM_LBUTTONUP: {
+				const POINTS point = MAKEPOINTS(lParam);
+				LeftMouseReleasedEvent* event = new LeftMouseReleasedEvent(point.x, point.y);
+				EventQueue::Enqueue(event);
+				break;
+			}
+			case WM_RBUTTONDOWN: {
+				const POINTS point = MAKEPOINTS(lParam);
+				RightMousePressedEvent* event = new RightMousePressedEvent(point.x, point.y);
+				EventQueue::Enqueue(event);
+				break;
+			}
+			case WM_RBUTTONUP: {
+				const POINTS point = MAKEPOINTS(lParam);
+				RightMouseReleasedEvent* event = new RightMouseReleasedEvent(point.x, point.y);
+				EventQueue::Enqueue(event);
+				break;
+			}
+			case WM_MBUTTONDOWN: {
+				const POINTS point = MAKEPOINTS(lParam);
+				MiddleMousePressedEvent* event = new MiddleMousePressedEvent(point.x, point.y);
+				EventQueue::Enqueue(event);
+				break;
+			}
+			case WM_MBUTTONUP: {
+				const POINTS point = MAKEPOINTS(lParam);
+				MiddleMouseReleasedEvent* event = new MiddleMouseReleasedEvent(point.x, point.y);
+				EventQueue::Enqueue(event);
+				break;
+			}
+			case WM_MOUSEWHEEL: {
+				const POINTS point = MAKEPOINTS(lParam);
+				if (GET_WHEEL_DELTA_WPARAM(wParam) > 0) {
+					MouseScrollUpEvent* event = new MouseScrollUpEvent(point.x, point.y);
+					EventQueue::Enqueue(event);
+				}
+				else {
+					MouseScrollDownEvent* event = new MouseScrollDownEvent(point.x, point.y);
 					EventQueue::Enqueue(event);
 				}
 				break;

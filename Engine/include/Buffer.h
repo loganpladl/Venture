@@ -10,12 +10,14 @@ namespace Venture {
 		Buffer();
 		~Buffer();
 
-		// Delete copy constructor and assignment operator to avoid passing by value
-		Buffer(const Buffer&) = delete;
+		// Deep copy
+		Buffer(const Buffer&);
+		Buffer(const Buffer&&) = delete;
+		// Delete assignment operator to avoid passing by value
 		Buffer& operator=(const Buffer&) = delete;
 
 		void Create(size_t bytes);
-		char* GetBuffer();
-		size_t GetBytes();
+		char* GetBuffer() const;
+		size_t GetBytes() const;
 	};
 }

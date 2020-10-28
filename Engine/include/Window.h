@@ -4,6 +4,7 @@
 #include "EventQueue.h"
 #include "Event.h"
 #include "KeyEvent.h"
+#include "MouseEvent.h"
 #include "Input.h"
 #include "Log.h"
 

@@ -2,6 +2,7 @@
 
 #include "EventQueue.h"
 #include "Log.h"
+#include "Mouse.h"
 
 namespace Venture {
 	class Input {
