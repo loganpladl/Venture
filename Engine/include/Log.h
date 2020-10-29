@@ -55,7 +55,5 @@ namespace Venture {
 		void DisableChannel(Channel channel);
 
 		int DebugPrintF(int verbosity, Channel channel, const char* format, ...);
-
-		static int VDebugPrintF(const char* format, va_list argList);
 	}
 }

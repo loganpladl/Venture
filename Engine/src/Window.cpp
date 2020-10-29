@@ -5,6 +5,9 @@ namespace Venture {
 		m_instance = hInstance;
 		m_windowClassName = L"VentureWindowClass";
 		m_window = NULL;
+		// Default width and height
+		m_width = 640;
+		m_height = 480;
 	}
 
 	int Window::Init() {
@@ -21,7 +24,7 @@ namespace Venture {
 		// Register the window class
 		WNDCLASS windowClass;
 		windowClass.style = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
-		windowClass.lpfnWndProc = WindowCallback;
+		windowClass.lpfnWndProc = WindowCallbackSetup;
 		windowClass.cbClsExtra = 0;
 		windowClass.cbWndExtra = 0;
 		windowClass.hInstance = m_instance;
@@ -48,11 +51,8 @@ namespace Venture {
 
 		// No menu for now.
 		
-		int defaultWidth = 640;
-		int defaultHeight = 480;
-		SetRect(&rect, 0, 0, defaultWidth, defaultHeight);
+		SetRect(&rect, 0, 0, m_width, m_height);
 		AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
-
 
 		m_window = CreateWindowEx(
 			0,
@@ -65,7 +65,7 @@ namespace Venture {
 			0,
 			0,
 			m_instance,
-			0
+			this // pointer to window instance so we can retrieve member function callback
 		);
 
 		if (m_window == NULL) {
@@ -74,6 +74,48 @@ namespace Venture {
 		}
 
 		return 0;
+	}
+
+	LRESULT CALLBACK Window::WindowCallbackSetup(
+		HWND window,
+		UINT message,
+		WPARAM wParam,
+		LPARAM lParam
+	) {
+		LRESULT result = 0;
+
+		switch (message) {
+			case WM_NCCREATE: {
+				// Get pointer to window instance
+				const CREATESTRUCT* const createStruct = reinterpret_cast<CREATESTRUCT*>(lParam);
+				Window* const windowInstance = static_cast<Window*>(createStruct->lpCreateParams);
+				SetWindowLongPtr(window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(windowInstance));
+				SetWindowLongPtr(window, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&Window::WindowCallbackStatic));
+				result = windowInstance->WindowCallback(window, message, wParam, lParam);
+				break;
+			}
+			default: {
+				result = DefWindowProc(window, message, wParam, lParam);
+				break;
+			}
+		}
+		return result;
+	}
+
+	LRESULT CALLBACK Window::WindowCallbackStatic(
+		HWND window,
+		UINT message,
+		WPARAM wParam,
+		LPARAM lParam
+	) {
+		// Get instance of window and call member callback function so long as window is not null
+		Window* windowInstance = reinterpret_cast<Window*>(GetWindowLongPtr(window, GWLP_USERDATA));
+		if (windowInstance) {
+			return windowInstance->WindowCallback(window, message, wParam, lParam);
+		}
+		else {
+			return DefWindowProc(window, message, wParam, lParam);
+		}
 	}
 
 	LRESULT CALLBACK Window::WindowCallback(
@@ -136,8 +178,33 @@ namespace Venture {
 			}
 			case WM_MOUSEMOVE: {
 				const POINTS point = MAKEPOINTS(lParam);
-				MouseMoveEvent* event = new MouseMoveEvent(point.x, point.y);
-				EventQueue::Enqueue(event);
+				// Check if mouse is in window, create move event if so
+				if (point.x >= 0 && point.x < m_width && point.y >= 0 && point.y < m_height) {
+					MouseMoveEvent* moveEvent = new MouseMoveEvent(point.x, point.y);
+					EventQueue::Enqueue(moveEvent);
+
+					// If mouse was not previously in window, create enter event
+					if (!Mouse::IsMouseInWindow()) {
+						SetCapture(window);
+						MouseEnterEvent* enterEvent = new MouseEnterEvent();
+						EventQueue::Enqueue(enterEvent);
+					}
+				}
+
+				// If getting messages while mouse is not in window, continue creating move events while mouse is held
+				// Release capture and create leave event when mouse is not held
+				else {
+					if (wParam & (MK_LBUTTON | MK_RBUTTON)) {
+						MouseMoveEvent* moveEvent = new MouseMoveEvent(point.x, point.y);
+						EventQueue::Enqueue(moveEvent);
+					}
+					else {
+						ReleaseCapture();
+						MouseLeaveEvent* leaveEvent = new MouseLeaveEvent();
+						EventQueue::Enqueue(leaveEvent);
+					}
+				}
+				
 				break;
 			}
 			case WM_LBUTTONDOWN: {

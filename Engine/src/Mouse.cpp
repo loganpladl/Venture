@@ -6,6 +6,8 @@ namespace Venture {
 	// initialize statics
 	int Mouse::m_x = 0;
 	int Mouse::m_y = 0;
+	bool Mouse::m_mouseInWindow = false;
+
 	Mouse::MouseMoveEventHandler Mouse::mouseMoveHandler;
 	Mouse::LeftMousePressedEventHandler Mouse::leftMousePressedHandler;
 	Mouse::LeftMouseReleasedEventHandler Mouse::leftMouseReleasedHandler;
@@ -15,6 +17,8 @@ namespace Venture {
 	Mouse::MiddleMouseReleasedEventHandler Mouse::middleMouseReleasedHandler;
 	Mouse::MouseScrollUpEventHandler Mouse::mouseScrollUpHandler;
 	Mouse::MouseScrollDownEventHandler Mouse::mouseScrollDownHandler;
+	Mouse::MouseEnterEventHandler Mouse::mouseEnterHandler;
+	Mouse::MouseLeaveEventHandler Mouse::mouseLeaveHandler;
 
 	void Mouse::MouseMoveEventHandler::Handle(Event* event) {
 		MouseMoveEvent* mouseMoveEvent = dynamic_cast<MouseMoveEvent*>(event);
@@ -72,6 +76,18 @@ namespace Venture {
 		Log::DebugPrintF(1, Log::Input, "Mouse Scroll Down - x = %i, y = %i \n", m_x, m_y);
 	}
 
+	void Mouse::MouseEnterEventHandler::Handle(Event* event) {
+		MouseEnterEvent* mouseEnterEvent = dynamic_cast<MouseEnterEvent*>(event);
+		m_mouseInWindow = true;
+		Log::DebugPrintF(1, Log::Input, "Mouse Enter \n");
+	}
+
+	void Mouse::MouseLeaveEventHandler::Handle(Event* event) {
+		MouseLeaveEvent* mouseLeaveEvent = dynamic_cast<MouseLeaveEvent*>(event);
+		m_mouseInWindow = false;
+		Log::DebugPrintF(1, Log::Input, "Mouse Leave \n");
+	}
+
 	void Mouse::Init() {
 		EventQueue::RegisterHandler(&mouseMoveHandler, MouseMove);
 		EventQueue::RegisterHandler(&leftMousePressedHandler, LeftMousePressed);
@@ -82,5 +98,7 @@ namespace Venture {
 		EventQueue::RegisterHandler(&middleMouseReleasedHandler, MiddleMouseReleased);
 		EventQueue::RegisterHandler(&mouseScrollUpHandler, MouseScrollUp);
 		EventQueue::RegisterHandler(&mouseScrollDownHandler, MouseScrollDown);
+		EventQueue::RegisterHandler(&mouseEnterHandler, MouseEnter);
+		EventQueue::RegisterHandler(&mouseLeaveHandler, MouseLeave);
 	}
 }

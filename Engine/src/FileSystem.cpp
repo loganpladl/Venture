@@ -12,19 +12,19 @@ namespace Venture {
 		return request;
 	}
 
-	File::AsyncReadRequest* FileSystem::AsyncReadFile(int fileHandle, Buffer& inputBuffer, size_t bufferSize, void (*func)()) {
+	File::AsyncReadRequest* FileSystem::AsyncReadFile(int fileHandle, Buffer inputBuffer, size_t bufferSize, void (*func)()) {
 		File::AsyncReadRequest* request = new File::AsyncReadRequest(fileHandle, inputBuffer, bufferSize, func);
 		FileQueue::Enqueue(request);
 		return request;
 	}
 
-	File::AsyncReadFullRequest* FileSystem::AsyncReadFullFile(int fileHandle, Buffer& inputBuffer, void (*func)()) {
+	File::AsyncReadFullRequest* FileSystem::AsyncReadFullFile(int fileHandle, Buffer inputBuffer, void (*func)()) {
 		File::AsyncReadFullRequest* request = new File::AsyncReadFullRequest(fileHandle, inputBuffer, func);
 		FileQueue::Enqueue(request);
 		return request;
 	}
 
-	File::AsyncWriteRequest* FileSystem::AsyncWriteFile(int fileHandle, Buffer& outputBuffer, size_t bufferSize, void (*func)()) {
+	File::AsyncWriteRequest* FileSystem::AsyncWriteFile(int fileHandle, Buffer outputBuffer, size_t bufferSize, void (*func)()) {
 		File::AsyncWriteRequest* request = new File::AsyncWriteRequest(fileHandle, outputBuffer, bufferSize, func);
 		FileQueue::Enqueue(request);
 		return request;

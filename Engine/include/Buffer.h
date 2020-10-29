@@ -14,7 +14,7 @@ namespace Venture {
 		Buffer(const Buffer&);
 		Buffer(const Buffer&&) = delete;
 		// Delete assignment operator to avoid passing by value
-		Buffer& operator=(const Buffer&) = delete;
+		Buffer& operator=(const Buffer&);
 
 		void Create(size_t bytes);
 		char* GetBuffer() const;

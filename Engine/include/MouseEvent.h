@@ -10,6 +10,7 @@ namespace Venture {
 		int m_x;
 		int m_y;
 		MouseEvent(EventType type, int x, int y) : Event{type}, m_x(x), m_y(y) {}
+		MouseEvent(EventType type) : Event{type}, m_x(0), m_y(0) {}
 	public:
 		std::pair<int, int> GetPosition() {
 			return std::pair<int, int>(m_x, m_y);
@@ -59,5 +60,15 @@ namespace Venture {
 	class MouseScrollDownEvent : public MouseEvent {
 	public:
 		MouseScrollDownEvent(int x, int y) : MouseEvent(MouseScrollDown, x, y) {}
+	};
+
+	class MouseEnterEvent : public MouseEvent {
+	public:
+		MouseEnterEvent() : MouseEvent(MouseEnter) {}
+	};
+
+	class MouseLeaveEvent : public MouseEvent {
+	public:
+		MouseLeaveEvent() : MouseEvent(MouseLeave) {}
 	};
 }

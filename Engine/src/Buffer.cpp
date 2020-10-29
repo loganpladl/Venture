@@ -21,6 +21,13 @@ namespace Venture {
 		memcpy(m_buffer, buffer.GetBuffer(), m_bytes);
 	}
 
+	Buffer& Buffer::operator=(const Buffer& buffer) {
+		m_bytes = buffer.GetBytes();
+		m_buffer = new char[m_bytes];
+		memcpy(m_buffer, buffer.GetBuffer(), m_bytes);
+		return *this;
+	}
+
 	void Buffer::Create(size_t bytes) {
 		if (m_buffer != NULL) {
 			delete m_buffer;

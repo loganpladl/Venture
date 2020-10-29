@@ -7,6 +7,7 @@ namespace Venture {
 	private:
 		static int m_x;
 		static int m_y;
+		static bool m_mouseInWindow;
 
 		struct MouseMoveEventHandler : EventHandler {
 			void Handle(Event* event) override;
@@ -43,6 +44,14 @@ namespace Venture {
 		struct MouseScrollDownEventHandler : EventHandler {
 			void Handle(Event* event) override;
 		};
+
+		struct MouseEnterEventHandler : EventHandler {
+			void Handle(Event* event) override;
+		};
+
+		struct MouseLeaveEventHandler : EventHandler {
+			void Handle(Event* event) override;
+		};
 	public:
 		static void Init();
 		static MouseMoveEventHandler mouseMoveHandler;
@@ -54,5 +63,11 @@ namespace Venture {
 		static MiddleMouseReleasedEventHandler middleMouseReleasedHandler;
 		static MouseScrollUpEventHandler mouseScrollUpHandler;
 		static MouseScrollDownEventHandler mouseScrollDownHandler;
+		static MouseEnterEventHandler mouseEnterHandler;
+		static MouseLeaveEventHandler mouseLeaveHandler;
+
+		static inline bool IsMouseInWindow() {
+			return m_mouseInWindow;
+		}
 	};
 }

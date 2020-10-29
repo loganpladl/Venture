@@ -60,11 +60,11 @@ namespace Venture {
 		struct AsyncReadRequest : public AsyncRequest {
 			int m_fileHandle;
 			// Predefined buffer and size given as input
-			Buffer& m_inputBuffer;
+			Buffer m_inputBuffer;
 			size_t m_bufferSize;
 
 			// Empty lambda as default callback
-			AsyncReadRequest(int fileHandle, Buffer& inputBuffer, size_t bufferSize, void (*callback)() = [](){}) :
+			AsyncReadRequest(int fileHandle, Buffer inputBuffer, size_t bufferSize, void (*callback)() = [](){}) :
 				AsyncRequest(AsyncRequestType::Read, callback), m_fileHandle(fileHandle), m_inputBuffer(inputBuffer), m_bufferSize(bufferSize) {}
 			int ProcessRequest() override;
 		};
@@ -73,11 +73,11 @@ namespace Venture {
 		struct AsyncReadFullRequest : public AsyncRequest {
 			int m_fileHandle;
 			// Initially null buffer to be allocated when request is processed
-			Buffer& m_inputBuffer;
+			Buffer m_inputBuffer;
 			// Initially zero, set when processed
 			size_t m_bufferSize;
 
-			AsyncReadFullRequest(int fileHandle, Buffer& inputBuffer, void (*callback)() = []() {}) :
+			AsyncReadFullRequest(int fileHandle, Buffer inputBuffer, void (*callback)() = []() {}) :
 				AsyncRequest(AsyncRequestType::ReadFull, callback), m_fileHandle(fileHandle), m_inputBuffer(inputBuffer) {
 				m_bufferSize = 0;
 			}
@@ -86,12 +86,12 @@ namespace Venture {
 
 		struct AsyncWriteRequest : public AsyncRequest {
 			int m_fileHandle;
-			Buffer& m_outputBuffer;
+			Buffer m_outputBuffer;
 			size_t m_bufferSize;
 
 			// Empty lambda as default callback
-			AsyncWriteRequest(int fileHandle, Buffer& inputBuffer, size_t bufferSize, void (*callback)() = []() {}) :
-				AsyncRequest(AsyncRequestType::Read, callback), m_fileHandle(fileHandle), m_outputBuffer(inputBuffer), m_bufferSize(bufferSize) {}
+			AsyncWriteRequest(int fileHandle, Buffer outputBuffer, size_t bufferSize, void (*callback)() = []() {}) :
+				AsyncRequest(AsyncRequestType::Read, callback), m_fileHandle(fileHandle), m_outputBuffer(outputBuffer), m_bufferSize(bufferSize) {}
 			int ProcessRequest() override;
 		};
 

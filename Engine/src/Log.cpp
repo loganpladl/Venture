@@ -64,23 +64,32 @@ namespace Venture {
 
 		int DebugPrintF(int verbosity, Channel channel, const char* format, ...) {
 			const int MAX_CHARS = 1024;
-			Buffer buffer(MAX_CHARS);
+			// Temporary buffer of max size to be used for formatting
+			Buffer tempBuffer(MAX_CHARS);
 
 			va_list argList;
 
 			va_start(argList, format);
-			int charsWritten = vsnprintf(buffer.GetBuffer(), MAX_CHARS, format, argList);
+			int charsWritten = vsnprintf(tempBuffer.GetBuffer(), MAX_CHARS, format, argList);
 			va_end(argList);
+
+			// Only print to console when global verbosity level is high enough and channel is active
+			// Print temp buffer since its null terminated
+			if (g_verbosity >= verbosity && isChannelActive(channel)) {
+				OutputDebugStringA(tempBuffer.GetBuffer());
+			}
+
+			// Not null terminated, could add one for null terminator
+			size_t size = (size_t)charsWritten;
+			// Truncated buffer of proper size to be written
+			Buffer newBuffer(size);
+			memcpy(newBuffer.GetBuffer(), tempBuffer.GetBuffer(), size);
 
 			// Print to file depending on channel
 			if (logFileHandles[channel] >= 0) {
-				File::AsyncWriteRequest* request = FileSystem::AsyncWriteFile(logFileHandles[channel], buffer, MAX_CHARS);
+				File::AsyncWriteRequest* request = FileSystem::AsyncWriteFile(logFileHandles[channel], newBuffer, size);
 			}
 
-			// Only print to console when global verbosity level is high enough and channel is active
-			if (g_verbosity >= verbosity && isChannelActive(channel)) {
-				OutputDebugStringA(buffer.GetBuffer());
-			}
 			return 0;
 		}
 	}
