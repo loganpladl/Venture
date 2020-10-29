@@ -8,6 +8,7 @@ namespace Venture {
 		static int m_x;
 		static int m_y;
 		static bool m_mouseInWindow;
+		static int m_scrollDelta;
 
 		struct MouseMoveEventHandler : EventHandler {
 			void Handle(Event* event) override;
@@ -69,5 +70,7 @@ namespace Venture {
 		static inline bool IsMouseInWindow() {
 			return m_mouseInWindow;
 		}
+
+		static void MouseScrolled(int x, int y, int delta);
 	};
 }

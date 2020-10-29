@@ -245,14 +245,10 @@ namespace Venture {
 			}
 			case WM_MOUSEWHEEL: {
 				const POINTS point = MAKEPOINTS(lParam);
-				if (GET_WHEEL_DELTA_WPARAM(wParam) > 0) {
-					MouseScrollUpEvent* event = new MouseScrollUpEvent(point.x, point.y);
-					EventQueue::Enqueue(event);
-				}
-				else {
-					MouseScrollDownEvent* event = new MouseScrollDownEvent(point.x, point.y);
-					EventQueue::Enqueue(event);
-				}
+				int delta = GET_WHEEL_DELTA_WPARAM(wParam);
+				// Delegate event creation to helper function in mouse class
+				// Will only create scrolled events once WHEEL_DELTA rotation is accumulated
+				Mouse::MouseScrolled(point.x, point.y, delta);
 				break;
 			}
 			default: {

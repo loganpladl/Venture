@@ -1,12 +1,14 @@
 #include "../include/Mouse.h"
 #include <utility>
 #include "../include/Log.h"
+#include <windows.h>
 
 namespace Venture {
 	// initialize statics
 	int Mouse::m_x = 0;
 	int Mouse::m_y = 0;
 	bool Mouse::m_mouseInWindow = false;
+	int Mouse::m_scrollDelta = 0;
 
 	Mouse::MouseMoveEventHandler Mouse::mouseMoveHandler;
 	Mouse::LeftMousePressedEventHandler Mouse::leftMousePressedHandler;
@@ -100,5 +102,22 @@ namespace Venture {
 		EventQueue::RegisterHandler(&mouseScrollDownHandler, MouseScrollDown);
 		EventQueue::RegisterHandler(&mouseEnterHandler, MouseEnter);
 		EventQueue::RegisterHandler(&mouseLeaveHandler, MouseLeave);
+	}
+
+	void Mouse::MouseScrolled(int x, int y, int delta) {
+		m_scrollDelta += delta;
+
+		// Generate scroll up events when accumulated delta is WHEEL_DELTA (120)
+		if (m_scrollDelta >= WHEEL_DELTA) {
+			m_scrollDelta -= WHEEL_DELTA;
+			MouseScrollUpEvent* event = new MouseScrollUpEvent(x, y);
+			EventQueue::Enqueue(event);
+		}
+		// Generate scroll down events when accumulated delta is -WHEEL_DELTA (-120)
+		if (m_scrollDelta <= -WHEEL_DELTA) {
+			m_scrollDelta += WHEEL_DELTA;
+			MouseScrollDownEvent* event = new MouseScrollDownEvent(x, y);
+			EventQueue::Enqueue(event);
+		}
 	}
 }
