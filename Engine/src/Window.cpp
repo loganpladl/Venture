@@ -1,8 +1,8 @@
 #include "../include/Window.h"
 
 namespace Venture {
-	Window::Window(HINSTANCE hInstance) {
-		m_instance = hInstance;
+	Window::Window() {
+		m_instance = GetModuleHandle(NULL);
 		m_windowClassName = L"VentureWindowClass";
 		m_window = NULL;
 		// Default width and height
@@ -131,13 +131,7 @@ namespace Venture {
 				break;
 			}
 			case WM_CLOSE: {
-				HMENU menu;
-				menu = GetMenu(window);
-				if (menu != NULL) {
-					DestroyMenu(menu);
-				}
-				DestroyWindow(window);
-				//UnregisterClass
+				Destroy();
 				break;
 			}
 			case WM_KILLFOCUS: {
@@ -257,5 +251,43 @@ namespace Venture {
 			}
 		}
 		return result;
+	}
+
+	int Window::Destroy() {
+		HMENU menu;
+		menu = GetMenu(m_window);
+		if (menu != NULL) {
+			DestroyMenu(menu);
+		}
+		DestroyWindow(m_window);
+		// Unregister window class
+		UnregisterClass(m_windowClassName, m_instance);
+		// Success
+		return 0;
+	}
+
+	Window::~Window() {
+		Destroy();
+	}
+
+	HWND Window::GetHandle() {
+		return m_window;
+	}
+
+	// Return true to quit
+	bool Window::ProcessMessages() {
+		bool gotMsg;
+		MSG msg;
+
+		// Process window events
+		gotMsg = PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE) != 0;
+
+		if (gotMsg) {
+			if (WM_QUIT == msg.message) {
+				return true;
+			}
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
 	}
 }
