@@ -45,6 +45,7 @@ namespace Venture {
 		// Create thread for asynchronous file IO
 		m_fileThread = std::thread(FileSystem::ProcessRequests);
 
+		Venture::Log::SetVerbosity(3);
 		Venture::Log::openLogFiles();
 		EventQueue::Init();
 		Input::Init();

@@ -1,5 +1,5 @@
 #pragma once
-#include "EventQueue.h"
+#include "EventHandler.h"
 #include "MouseEvent.h"
 
 namespace Venture {
@@ -72,5 +72,12 @@ namespace Venture {
 		}
 
 		static void MouseScrolled(int x, int y, int delta);
+
+		static inline void MouseEnterWindow() {
+			m_mouseInWindow = true;
+		}
+		static inline void MouseLeaveWindow() {
+			m_mouseInWindow = false;
+		}
 	};
 }

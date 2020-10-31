@@ -21,11 +21,14 @@ namespace Venture {
 		LRESULT CALLBACK WindowCallback(HWND window, UINT msg, WPARAM wParam, LPARAM lParam);
 		HWND GetHandle();
 		bool ProcessMessages();
+		void GainFocus();
+		void LoseFocus();
 	private:
 		HINSTANCE m_instance;
 		LPCWSTR m_windowClassName;
 		HWND m_window;
 		int m_width;
 		int m_height;
+		bool m_windowHasFocus;
 	};
 }

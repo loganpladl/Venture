@@ -1,7 +1,7 @@
 #include "../include/Mouse.h"
 #include <utility>
 #include "../include/Log.h"
-#include <windows.h>
+#include "../include/EventQueue.h"
 
 namespace Venture {
 	// initialize statics
@@ -80,13 +80,13 @@ namespace Venture {
 
 	void Mouse::MouseEnterEventHandler::Handle(Event* event) {
 		MouseEnterEvent* mouseEnterEvent = dynamic_cast<MouseEnterEvent*>(event);
-		m_mouseInWindow = true;
+		MouseEnterWindow();
 		Log::DebugPrintF(1, Log::Input, "Mouse Enter \n");
 	}
 
 	void Mouse::MouseLeaveEventHandler::Handle(Event* event) {
 		MouseLeaveEvent* mouseLeaveEvent = dynamic_cast<MouseLeaveEvent*>(event);
-		m_mouseInWindow = false;
+		MouseLeaveWindow();
 		Log::DebugPrintF(1, Log::Input, "Mouse Leave \n");
 	}
 

@@ -21,6 +21,8 @@ namespace Venture {
 			"Log"
 		};
 
+		bool g_initialized = false;
+
 		const int NUM_CHANNELS = 8;
 		const char* LOG_PATH = "log\\";
 
@@ -50,6 +52,7 @@ namespace Venture {
 				File::AsyncOpenRequest* request = FileSystem::AsyncOpenFile(path, "w+");
 				logFileHandles[i] = request->getFileHandle();
 			}
+			g_initialized = true;
 			return 0;
 		}
 
@@ -77,6 +80,11 @@ namespace Venture {
 			// Print temp buffer since its null terminated
 			if (g_verbosity >= verbosity && isChannelActive(channel)) {
 				OutputDebugStringA(tempBuffer.GetBuffer());
+			}
+
+			// Only print to log files if Log has been initialized
+			if (!g_initialized) {
+				return -1;
 			}
 
 			// Not null terminated, could add one for null terminator

@@ -142,7 +142,32 @@ namespace Venture {
 				PostQuitMessage(0);
 				break;
 			}
+			case WM_ACTIVATE: {
+				// Low order word of wParam is 1 if activated, 2 if activated by mouse click, 3 if deactivated
+				if (LOWORD(wParam) == 1) {
+					GainFocus();
+				}
+				else if (LOWORD(wParam) == 2) {
+					GainFocus();
+				}
+				else  {
+					LoseFocus();
+					if (Mouse::IsMouseInWindow()) {
+						ReleaseCapture();
+						MouseLeaveEvent* leaveEvent = new MouseLeaveEvent();
+						EventQueue::Enqueue(leaveEvent);
+					}
+				}
+				break;
+			}
 			case WM_ACTIVATEAPP: {
+				// wParam is true if window is being activated; false if window is being deactivated
+				if (wParam) {
+
+				}
+				else {
+					
+				}
 				break;
 			}
 			case WM_KEYDOWN:
@@ -171,14 +196,19 @@ namespace Venture {
 				// Text input
 			}
 			case WM_MOUSEMOVE: {
+				if (!m_windowHasFocus) {
+					break;
+				}
 				const POINTS point = MAKEPOINTS(lParam);
 				// Check if mouse is in window, create move event if so
 				if (point.x >= 0 && point.x < m_width && point.y >= 0 && point.y < m_height) {
+					
 					MouseMoveEvent* moveEvent = new MouseMoveEvent(point.x, point.y);
 					EventQueue::Enqueue(moveEvent);
 
 					// If mouse was not previously in window, create enter event
 					if (!Mouse::IsMouseInWindow()) {
+						
 						SetCapture(window);
 						MouseEnterEvent* enterEvent = new MouseEnterEvent();
 						EventQueue::Enqueue(enterEvent);
@@ -290,5 +320,13 @@ namespace Venture {
 			DispatchMessage(&msg);
 		}
 		return true;
+	}
+
+	void Window::GainFocus() {
+		m_windowHasFocus = true;
+	}
+
+	void Window::LoseFocus() {
+		m_windowHasFocus = false;
 	}
 }

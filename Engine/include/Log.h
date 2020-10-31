@@ -29,6 +29,8 @@ namespace Venture {
 
 		extern int logFileHandles[];
 
+		extern bool g_initialized;
+
 		const char* getLogFilePath(const char* name);
 
 		int openLogFiles();
@@ -47,7 +49,7 @@ namespace Venture {
 
 		extern int g_verbosity;
 
-		inline void setVerbosity(int verbosity) {
+		inline void SetVerbosity(int verbosity) {
 			g_verbosity = verbosity;
 		}
 
