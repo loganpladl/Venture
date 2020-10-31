@@ -274,7 +274,7 @@ namespace Venture {
 		return m_window;
 	}
 
-	// Return true to quit
+	// Return true to continue program execution, false to quit
 	bool Window::ProcessMessages() {
 		bool gotMsg;
 		MSG msg;
@@ -284,10 +284,11 @@ namespace Venture {
 
 		if (gotMsg) {
 			if (WM_QUIT == msg.message) {
-				return true;
+				return false;
 			}
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+		return true;
 	}
 }

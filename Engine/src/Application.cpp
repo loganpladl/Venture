@@ -4,8 +4,9 @@
 #include "../include/EventQueue.h"
 #include "../include/Input.h"
 #include "../include/FileSystem.h"
-#include <thread>
-#include "../include/RenderManager.h"
+#include "../include/Time.h"
+
+
 
 namespace Venture {
 	Application::Application() : m_window(){
@@ -14,41 +15,58 @@ namespace Venture {
 	}
 
 	int Application::Run() {
-		bool gotMsg;
-		MSG msg;
-		msg.message = WM_NULL;
-		PeekMessage(&msg, NULL, 0U, 0U, PM_NOREMOVE);
+		Init();
 
+		// Fixed timestep
+		auto TIME_PER_UPDATE = .01666666;
+
+		// Set current time
+		Time::NewDelta();
+		double accumulatedTime = 0.0;
+
+		while (m_window.ProcessMessages()) {
+			auto deltaTime = Time::NewDelta();
+
+			accumulatedTime += deltaTime;
+
+			// Update with fixed timestep
+			while (accumulatedTime >= TIME_PER_UPDATE) {
+				accumulatedTime-= TIME_PER_UPDATE;
+				Update();
+			}
+			// Render every loop
+			Render();
+		}
+		Shutdown();
+		return 0;
+	}
+
+	int Application::Init() {
 		// Create thread for asynchronous file IO
-		std::thread fileThread(FileSystem::ProcessRequests);
+		m_fileThread = std::thread(FileSystem::ProcessRequests);
 
 		Venture::Log::openLogFiles();
 		EventQueue::Init();
 		Input::Init();
 
-		RenderManager renderManager(m_window.GetHandle());
-		renderManager.Init();
+		m_renderManager.Init(m_window.GetHandle());
+		return 0;
+	}
 
-		while (WM_QUIT != msg.message) {
-			// Process window events
-			gotMsg = PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE) != 0;
-
-			if (gotMsg) {
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-			}
-			else {
-				// Handle Venture events
-				EventQueue::DispatchEvents();
-				// update and render
-				renderManager.Render();
-			}
-		}
-
+	int Application::Shutdown() {
 		Venture::Log::closeLogFiles();
 
 		FileSystem::Terminate();
-		fileThread.join();
+		m_fileThread.join();
+		return 0;
+	}
+	int Application::Update() {
+		// Handle Venture events
+		EventQueue::DispatchEvents();
+		return 0;
+	}
+	int Application::Render() {
+		m_renderManager.Render();
 		return 0;
 	}
 }

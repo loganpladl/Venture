@@ -1,14 +1,13 @@
 #include "../include/Direct3DManager.h"
 
 namespace Venture {
-	Direct3DManager::Direct3DManager(HWND window) {
-		m_device = nullptr;
-		m_context = nullptr;
+	Direct3DManager::Direct3DManager() {
 		m_featureLevel = D3D_FEATURE_LEVEL_11_1; //default
-		m_swapChain = nullptr;
-		m_window = window;
+		m_window = nullptr;
 	}
-	int Direct3DManager::Init() {
+	int Direct3DManager::Init(HWND window) {
+		m_window = window;
+
 		D3D_FEATURE_LEVEL levels[] = {
 			D3D_FEATURE_LEVEL_11_1,
 			D3D_FEATURE_LEVEL_11_0,
@@ -64,6 +63,13 @@ namespace Venture {
 			&m_context
 		);
 
+		ID3D11Resource* backBuffer = nullptr;
+		m_swapChain->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&backBuffer));
+		if (backBuffer != 0) {
+			m_device->CreateRenderTargetView(backBuffer, nullptr, &m_renderTargetView);
+		}
+		backBuffer->Release();
+
 		if (FAILED(result)) {
 			// Handle potential device creation failure
 		}
@@ -79,9 +85,17 @@ namespace Venture {
 		if (m_swapChain != nullptr) {
 			m_swapChain->Release();
 		}
+		if (m_renderTargetView != nullptr) {
+			m_renderTargetView->Release();
+		}
 	}
 
 	void Direct3DManager::Present() {
 		m_swapChain->Present(1u, 0u);
+	}
+
+	void Direct3DManager::ClearBuffer(float red, float green, float blue) {
+		const float color[] = { red, green, blue, 1.0f };
+		m_context->ClearRenderTargetView(m_renderTargetView, color);
 	}
 }
