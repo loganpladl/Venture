@@ -1,7 +1,8 @@
 #include "../include/Mouse.h"
 #include <utility>
 #include "../include/Log.h"
-#include "../include/EventQueue.h"
+#include "../include/EventSystem.h"
+#include "../include/MouseEvent.h"
 
 namespace Venture {
 	// initialize statics
@@ -91,17 +92,17 @@ namespace Venture {
 	}
 
 	void Mouse::Init() {
-		EventQueue::RegisterHandler(&mouseMoveHandler, MouseMove);
-		EventQueue::RegisterHandler(&leftMousePressedHandler, LeftMousePressed);
-		EventQueue::RegisterHandler(&leftMouseReleasedHandler, LeftMouseReleased);
-		EventQueue::RegisterHandler(&rightMousePressedHandler, RightMousePressed);
-		EventQueue::RegisterHandler(&rightMouseReleasedHandler, RightMouseReleased);
-		EventQueue::RegisterHandler(&middleMousePressedHandler, MiddleMousePressed);
-		EventQueue::RegisterHandler(&middleMouseReleasedHandler, MiddleMouseReleased);
-		EventQueue::RegisterHandler(&mouseScrollUpHandler, MouseScrollUp);
-		EventQueue::RegisterHandler(&mouseScrollDownHandler, MouseScrollDown);
-		EventQueue::RegisterHandler(&mouseEnterHandler, MouseEnter);
-		EventQueue::RegisterHandler(&mouseLeaveHandler, MouseLeave);
+		EventSystem::RegisterHandler(&mouseMoveHandler, EventType::MouseMove);
+		EventSystem::RegisterHandler(&leftMousePressedHandler, EventType::LeftMousePressed);
+		EventSystem::RegisterHandler(&leftMouseReleasedHandler, EventType::LeftMouseReleased);
+		EventSystem::RegisterHandler(&rightMousePressedHandler, EventType::RightMousePressed);
+		EventSystem::RegisterHandler(&rightMouseReleasedHandler, EventType::RightMouseReleased);
+		EventSystem::RegisterHandler(&middleMousePressedHandler, EventType::MiddleMousePressed);
+		EventSystem::RegisterHandler(&middleMouseReleasedHandler, EventType::MiddleMouseReleased);
+		EventSystem::RegisterHandler(&mouseScrollUpHandler, EventType::MouseScrollUp);
+		EventSystem::RegisterHandler(&mouseScrollDownHandler, EventType::MouseScrollDown);
+		EventSystem::RegisterHandler(&mouseEnterHandler, EventType::MouseEnter);
+		EventSystem::RegisterHandler(&mouseLeaveHandler, EventType::MouseLeave);
 	}
 
 	void Mouse::MouseScrolled(int x, int y, int delta) {
@@ -111,13 +112,15 @@ namespace Venture {
 		if (m_scrollDelta >= WHEEL_DELTA) {
 			m_scrollDelta -= WHEEL_DELTA;
 			MouseScrollUpEvent* event = new MouseScrollUpEvent(x, y);
-			EventQueue::Enqueue(event);
+			EventSystem::Enqueue(event);
 		}
 		// Generate scroll down events when accumulated delta is -WHEEL_DELTA (-120)
 		if (m_scrollDelta <= -WHEEL_DELTA) {
 			m_scrollDelta += WHEEL_DELTA;
 			MouseScrollDownEvent* event = new MouseScrollDownEvent(x, y);
-			EventQueue::Enqueue(event);
+			EventSystem::Enqueue(event);
 		}
 	}
+
+	
 }

@@ -149,14 +149,13 @@
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Buffer.cpp" />
-    <ClCompile Include="src\CircularQueue.cpp" />
     <ClCompile Include="src\Direct3DManager.cpp" />
     <ClCompile Include="src\EntryPoint.cpp" />
-    <ClCompile Include="src\EventQueue.cpp" />
+    <ClCompile Include="src\EventSystem.cpp" />
     <ClCompile Include="src\File.cpp" />
-    <ClCompile Include="src\FileQueue.cpp" />
     <ClCompile Include="src\FileSystem.cpp" />
     <ClCompile Include="src\Input.cpp" />
+    <ClCompile Include="src\Keyboard.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\Mouse.cpp" />
     <ClCompile Include="src\RenderManager.cpp" />
@@ -170,11 +169,11 @@
     <ClInclude Include="include\Direct3DManager.h" />
     <ClInclude Include="include\Event.h" />
     <ClInclude Include="include\EventHandler.h" />
-    <ClInclude Include="include\EventQueue.h" />
+    <ClInclude Include="include\EventSystem.h" />
     <ClInclude Include="include\File.h" />
-    <ClInclude Include="include\FileQueue.h" />
     <ClInclude Include="include\FileSystem.h" />
     <ClInclude Include="include\Input.h" />
+    <ClInclude Include="include\Keyboard.h" />
     <ClInclude Include="include\KeyEvent.h" />
     <ClInclude Include="include\Log.h" />
     <ClInclude Include="include\Mouse.h" />

@@ -1,7 +1,7 @@
 #include "../include/Application.h"
 
 #include "../include/Log.h"
-#include "../include/EventQueue.h"
+#include "../include/EventSystem.h"
 #include "../include/Input.h"
 #include "../include/FileSystem.h"
 #include "../include/Time.h"
@@ -62,7 +62,7 @@ namespace Venture {
 	}
 	int Application::Update() {
 		// Handle Venture events
-		EventQueue::DispatchEvents();
+		EventSystem::DispatchEvents();
 		return 0;
 	}
 	int Application::Render() {

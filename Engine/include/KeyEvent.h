@@ -1,22 +1,22 @@
 #pragma once
 
 #include "Event.h"
-#include "Input.h"
+#include "Keyboard.h"
 
 namespace Venture {
 	class KeyPressedEvent : public Event {
 	private :
 
 	public:
-		KeyPressedEvent(Input::KeyCode keyCode) : Event{ KeyPressed }, m_keyCode(keyCode) {}
-		Input::KeyCode m_keyCode;
+		KeyPressedEvent(Keyboard::KeyCode keyCode) : Event{ KeyPressed }, m_keyCode(keyCode) {}
+		Keyboard::KeyCode m_keyCode;
 	};
 
 	class KeyReleasedEvent : public Event {
 	private:
 
 	public:
-		KeyReleasedEvent(Input::KeyCode keyCode) : Event{ KeyReleased }, m_keyCode(keyCode) {}
-		Input::KeyCode m_keyCode;
+		KeyReleasedEvent(Keyboard::KeyCode keyCode) : Event{ KeyReleased }, m_keyCode(keyCode) {}
+		Keyboard::KeyCode m_keyCode;
 	};
 }

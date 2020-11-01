@@ -1,6 +1,5 @@
 #pragma once
 #include "EventHandler.h"
-#include "MouseEvent.h"
 
 namespace Venture {
 	class Mouse {

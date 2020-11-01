@@ -8,6 +8,7 @@ namespace Venture {
 		// Default width and height
 		m_width = 640;
 		m_height = 480;
+		m_windowHasFocus = false;
 	}
 
 	int Window::Init() {
@@ -154,8 +155,7 @@ namespace Venture {
 					LoseFocus();
 					if (Mouse::IsMouseInWindow()) {
 						ReleaseCapture();
-						MouseLeaveEvent* leaveEvent = new MouseLeaveEvent();
-						EventQueue::Enqueue(leaveEvent);
+						Input::MouseLeave();
 					}
 				}
 				break;
@@ -173,27 +173,26 @@ namespace Venture {
 			case WM_KEYDOWN:
 			// WM_SYSKEYDOWN is needed for ALT key and other system keys
 			case WM_SYSKEYDOWN: {
-				Input::KeyCode keyCode = Input::ConvertWindowsKeyCode((int)wParam);
+				Keyboard::KeyCode keyCode = Keyboard::ConvertWindowsKeyCode((int)wParam);
 				// Only create events for relevant keycodes and eliminate repeats
 				int prevState = lParam & 0x40000000;
-				if (keyCode != Input::Unassigned && prevState == 0) {
-					KeyPressedEvent* event = new KeyPressedEvent(keyCode);
-					EventQueue::Enqueue(event);
+				if (keyCode != Keyboard::Unassigned && prevState == 0) {
+					Input::KeyPressed(keyCode);
 				}
 				break;
 			}
 			case WM_KEYUP:
 			case WM_SYSKEYUP: {
-				Input::KeyCode keyCode = Input::ConvertWindowsKeyCode((int)wParam);
+				Keyboard::KeyCode keyCode = Keyboard::ConvertWindowsKeyCode((int)wParam);
 				// Only create events for relevant keycodes
-				if (keyCode != Input::Unassigned) {
-					KeyReleasedEvent* event = new KeyReleasedEvent(keyCode);
-					EventQueue::Enqueue(event);
+				if (keyCode != Keyboard::Unassigned) {
+					Input::KeyReleased(keyCode);
 				}
 				break;
 			}
 			case WM_CHAR: {
 				// Text input
+				break;
 			}
 			case WM_MOUSEMOVE: {
 				if (!m_windowHasFocus) {
@@ -203,15 +202,12 @@ namespace Venture {
 				// Check if mouse is in window, create move event if so
 				if (point.x >= 0 && point.x < m_width && point.y >= 0 && point.y < m_height) {
 					
-					MouseMoveEvent* moveEvent = new MouseMoveEvent(point.x, point.y);
-					EventQueue::Enqueue(moveEvent);
+					Input::MouseMove(point.x, point.y);
 
 					// If mouse was not previously in window, create enter event
 					if (!Mouse::IsMouseInWindow()) {
-						
 						SetCapture(window);
-						MouseEnterEvent* enterEvent = new MouseEnterEvent();
-						EventQueue::Enqueue(enterEvent);
+						Input::MouseEnter();
 					}
 				}
 
@@ -219,13 +215,11 @@ namespace Venture {
 				// Release capture and create leave event when mouse is not held
 				else {
 					if (wParam & (MK_LBUTTON | MK_RBUTTON)) {
-						MouseMoveEvent* moveEvent = new MouseMoveEvent(point.x, point.y);
-						EventQueue::Enqueue(moveEvent);
+						Input::MouseMove(point.x, point.y);
 					}
 					else {
 						ReleaseCapture();
-						MouseLeaveEvent* leaveEvent = new MouseLeaveEvent();
-						EventQueue::Enqueue(leaveEvent);
+						Input::MouseLeave();
 					}
 				}
 				
@@ -233,38 +227,32 @@ namespace Venture {
 			}
 			case WM_LBUTTONDOWN: {
 				const POINTS point = MAKEPOINTS(lParam);
-				LeftMousePressedEvent* event = new LeftMousePressedEvent(point.x, point.y);
-				EventQueue::Enqueue(event);
+				Input::LeftMousePressed(point.x, point.y);
 				break;
 			}
 			case WM_LBUTTONUP: {
 				const POINTS point = MAKEPOINTS(lParam);
-				LeftMouseReleasedEvent* event = new LeftMouseReleasedEvent(point.x, point.y);
-				EventQueue::Enqueue(event);
+				Input::LeftMouseReleased(point.x, point.y);
 				break;
 			}
 			case WM_RBUTTONDOWN: {
 				const POINTS point = MAKEPOINTS(lParam);
-				RightMousePressedEvent* event = new RightMousePressedEvent(point.x, point.y);
-				EventQueue::Enqueue(event);
+				Input::RightMousePressed(point.x, point.y);
 				break;
 			}
 			case WM_RBUTTONUP: {
 				const POINTS point = MAKEPOINTS(lParam);
-				RightMouseReleasedEvent* event = new RightMouseReleasedEvent(point.x, point.y);
-				EventQueue::Enqueue(event);
+				Input::RightMouseReleased(point.x, point.y);
 				break;
 			}
 			case WM_MBUTTONDOWN: {
 				const POINTS point = MAKEPOINTS(lParam);
-				MiddleMousePressedEvent* event = new MiddleMousePressedEvent(point.x, point.y);
-				EventQueue::Enqueue(event);
+				Input::MiddleMousePressed(point.x, point.y);
 				break;
 			}
 			case WM_MBUTTONUP: {
 				const POINTS point = MAKEPOINTS(lParam);
-				MiddleMouseReleasedEvent* event = new MiddleMouseReleasedEvent(point.x, point.y);
-				EventQueue::Enqueue(event);
+				Input::MiddleMouseReleased(point.x, point.y);
 				break;
 			}
 			case WM_MOUSEWHEEL: {

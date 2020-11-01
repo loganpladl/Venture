@@ -1,13 +1,16 @@
 #pragma once
 
-#include "FileQueue.h"
+#include "File.h"
 #include <atomic>
 #include "Buffer.h"
+#include "CircularQueue.h"
 
 namespace Venture {
 	class FileSystem {
 	private:
-		static std::atomic<bool> processing;
+		static std::atomic<bool> s_processing;
+		static std::mutex s_queueMutex;
+		static CircularQueue<File::AsyncRequest*> s_queue;
 	public:
 		// Functions to create requests and add to the queue
 		static File::AsyncOpenRequest* AsyncOpenFile(std::string path, std::string mode, void (*func)() = [](){});
@@ -17,5 +20,7 @@ namespace Venture {
 		static File::AsyncCloseRequest* AsyncCloseFile(int fileHandle, void (*func)() = [](){});
 		static void ProcessRequests();
 		static void Terminate();
+		static void Enqueue(File::AsyncRequest*);
+		static File::AsyncRequest* Dequeue();
 	};
 }
