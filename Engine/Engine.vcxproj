@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Buffer.cpp" />
+    <ClCompile Include="src\CircularQueue.cpp" />
     <ClCompile Include="src\Direct3DManager.cpp" />
     <ClCompile Include="src\EntryPoint.cpp" />
     <ClCompile Include="src\EventQueue.cpp" />
@@ -165,6 +166,7 @@
   <ItemGroup>
     <ClInclude Include="include\Application.h" />
     <ClInclude Include="include\Buffer.h" />
+    <ClInclude Include="include\CircularQueue.h" />
     <ClInclude Include="include\Direct3DManager.h" />
     <ClInclude Include="include\Event.h" />
     <ClInclude Include="include\EventHandler.h" />

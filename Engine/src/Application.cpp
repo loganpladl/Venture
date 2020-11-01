@@ -47,7 +47,6 @@ namespace Venture {
 
 		Venture::Log::SetVerbosity(3);
 		Venture::Log::openLogFiles();
-		EventQueue::Init();
 		Input::Init();
 
 		m_renderManager.Init(m_window.GetHandle());

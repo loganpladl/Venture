@@ -7,9 +7,6 @@ namespace Venture {
 	int EventQueue::tail = 0;
 	std::list<EventHandler*> EventQueue::eventHandlers[NUM_EVENT_TYPES];
 
-	void EventQueue::Init() {
-
-	}
 	int EventQueue::Enqueue(Event* event) {
 		// Check if queue is full
 		if ((tail + 1) % MAX_EVENTS == head) {

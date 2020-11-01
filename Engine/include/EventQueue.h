@@ -13,7 +13,6 @@ namespace Venture {
 		// Array of lists of registered event handlers to receive events of each event type
 		static std::list<EventHandler*> eventHandlers[NUM_EVENT_TYPES];
 	public:
-		static void Init();
 		static int Enqueue(Event* event);
 		static Event* Dequeue();
 		// Dispatch all events
