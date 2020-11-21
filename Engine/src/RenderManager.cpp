@@ -13,6 +13,7 @@ namespace Venture {
 
 	void RenderManager::Render() {
 		m_direct3DManager.ClearBuffer(0.0f, 0.0f, 0.0f);
+		m_direct3DManager.Triangle();
 		m_direct3DManager.Present();
 	}
 }

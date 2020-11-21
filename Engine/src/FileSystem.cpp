@@ -38,6 +38,12 @@ namespace Venture {
 		return request;
 	}
 
+	File::AsyncOpenReadCloseRequest* FileSystem::AsyncOpenReadCloseFile(std::string path, std::string mode, void (*func)()) {
+		File::AsyncOpenReadCloseRequest* request = new File::AsyncOpenReadCloseRequest(path, mode);
+		Enqueue(request);
+		return request;
+	}
+
 	// Function to be called by IO thread
 	void FileSystem::ProcessRequests() {
 		while (s_processing) {

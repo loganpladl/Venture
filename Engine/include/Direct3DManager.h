@@ -12,6 +12,7 @@ namespace Venture {
 		int Init(HWND window);
 		void Present();
 		void ClearBuffer(float red, float green, float blue);
+		void Triangle();
 	private:
 		ID3D11Device* m_device = nullptr;
 		ID3D11DeviceContext* m_context = nullptr;

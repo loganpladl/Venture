@@ -13,6 +13,8 @@ namespace Venture {
 		Component(ComponentType type) : m_type(type) {}
 	public:
 		virtual void Update() = 0;
+		virtual void EarlyUpdate() = 0;
+		virtual void LateUpdate() = 0;
 		inline ComponentType GetType() { return m_type; }
 		inline bool IsType(ComponentType type) { return type == m_type; }
 		virtual void ReceiveEvents(Event event);

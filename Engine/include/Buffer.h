@@ -12,8 +12,6 @@ namespace Venture {
 
 		// Deep copy
 		Buffer(const Buffer&);
-		Buffer(const Buffer&&) = delete;
-		// Delete assignment operator to avoid passing by value
 		Buffer& operator=(const Buffer&);
 
 		void Create(size_t bytes);

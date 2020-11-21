@@ -8,7 +8,7 @@
 namespace Venture {
 	namespace File {
 		enum class AsyncRequestType {
-			Invalid, Read, Write, Open, Close, ReadFull
+			Invalid, Read, Write, Open, Close, ReadFull, OpenReadClose
 		};
 
 		extern const int MAX_FILES;
@@ -21,6 +21,11 @@ namespace Venture {
 		int newFileHandle();
 
 		void deleteFile(int handle);
+		void deleteFile(FILE* fp);
+
+		int OpenFile(FILE** file, std::string& path, std::string& mode);
+
+		int ReadFullFile(FILE* fp, Buffer& inputBuffer, size_t& bufferSize);
 
 		class AsyncRequest {
 		protected:
@@ -102,6 +107,30 @@ namespace Venture {
 			AsyncCloseRequest(int fileHandle, void (*callback)() = []() {}) :
 				AsyncRequest(AsyncRequestType::Open, callback), m_fileHandle(fileHandle) {}
 			int ProcessRequest() override;
+		};
+
+		// Open a file, read the entire file, and close the file
+		class AsyncOpenReadCloseRequest : public AsyncRequest {
+		private:
+			std::string m_path;
+			std::string m_mode;
+			// Initially null buffer to be allocated when request is processed
+			Buffer m_inputBuffer;
+			// Initially zero, set when processed
+			size_t m_bufferSize;
+		public:
+			// Empty lambda function as default callback
+			AsyncOpenReadCloseRequest(std::string path, std::string mode, void (*callback)() = []() {}) :
+				AsyncRequest(AsyncRequestType::OpenReadClose, callback), m_path(path), m_mode(mode) {
+				m_bufferSize = 0;
+			}
+			int ProcessRequest() override;
+			inline Buffer GetBuffer() {
+				return m_inputBuffer;
+			}
+			inline size_t GetBufferSize() {
+				return m_bufferSize;
+			}
 		};
 	}
 }

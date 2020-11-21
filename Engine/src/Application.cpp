@@ -5,6 +5,7 @@
 #include "../include/Input.h"
 #include "../include/FileSystem.h"
 #include "../include/Time.h"
+#include "../GameObject.h"
 
 
 
@@ -63,6 +64,14 @@ namespace Venture {
 	int Application::Update() {
 		// Handle Venture events
 		EventSystem::DispatchEvents();
+
+		// Update all GameObjects
+		GameObject** gameObjects = GameObject::GetAllGameObjects();
+		int maxGameObjects = GameObject::GetMaxGameObjects();
+		for (int i = 0; i < maxGameObjects; i++) {
+			GameObject* gameObject = gameObjects[i];
+			gameObject->Update();
+		}
 		return 0;
 	}
 	int Application::Render() {

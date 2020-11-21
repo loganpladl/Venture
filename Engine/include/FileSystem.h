@@ -18,6 +18,7 @@ namespace Venture {
 		static File::AsyncReadFullRequest* AsyncReadFullFile(int fileHandle, Buffer inputBuffer, void (*func)() = [](){});
 		static File::AsyncWriteRequest* AsyncWriteFile(int fileHandle, Buffer outputBuffer, size_t bufferSize, void (*func)() = [](){});
 		static File::AsyncCloseRequest* AsyncCloseFile(int fileHandle, void (*func)() = [](){});
+		static File::AsyncOpenReadCloseRequest* AsyncOpenReadCloseFile(std::string path, std::string mode, void (*func)() = [](){});
 		static void ProcessRequests();
 		static void Terminate();
 		static void Enqueue(File::AsyncRequest*);

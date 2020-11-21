@@ -201,14 +201,13 @@ namespace Venture {
 				const POINTS point = MAKEPOINTS(lParam);
 				// Check if mouse is in window, create move event if so
 				if (point.x >= 0 && point.x < m_width && point.y >= 0 && point.y < m_height) {
-					
-					Input::MouseMove(point.x, point.y);
-
 					// If mouse was not previously in window, create enter event
 					if (!Mouse::IsMouseInWindow()) {
 						SetCapture(window);
 						Input::MouseEnter();
 					}
+					// Generate mouse move event regardless
+					Input::MouseMove(point.x, point.y);
 				}
 
 				// If getting messages while mouse is not in window, continue creating move events while mouse is held
