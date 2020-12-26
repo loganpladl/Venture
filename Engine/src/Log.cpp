@@ -18,12 +18,13 @@ namespace Venture {
 			"Resources",
 			"Input",
 			"Audio",
-			"Log"
+			"Files",
+			"Rendering"
 		};
 
 		bool g_initialized = false;
 
-		const int NUM_CHANNELS = 8;
+		const int NUM_CHANNELS = 9;
 		const char* LOG_PATH = "log\\";
 
 		int logFileHandles[NUM_CHANNELS];

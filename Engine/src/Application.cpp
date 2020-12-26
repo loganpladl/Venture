@@ -21,14 +21,23 @@ namespace Venture {
 		// Fixed timestep
 		auto TIME_PER_UPDATE = .01666666;
 
+		const auto SECOND = 1.0;
+		int renderedFrames = 0;
+
 		// Set current time
 		Time::NewDelta();
+		// Timer used to update game logic with fixed timestep
 		double accumulatedTime = 0.0;
+		// Timer used for frames per second calculation
+		double secondTimer = 0.0;
+
+		double framesPerSecond = 0;
 
 		while (m_window.ProcessMessages()) {
 			auto deltaTime = Time::NewDelta();
 
 			accumulatedTime += deltaTime;
+			secondTimer += deltaTime;
 
 			// Update with fixed timestep
 			while (accumulatedTime >= TIME_PER_UPDATE) {
@@ -37,6 +46,15 @@ namespace Venture {
 			}
 			// Render every loop
 			Render();
+			renderedFrames++;
+			// Once a second has passed, update frames per second and reset variables
+			if (secondTimer >= SECOND) {
+				framesPerSecond = renderedFrames;
+				renderedFrames = 0;
+				secondTimer = 0;
+			}
+			//Log::DebugPrintF(0, Log::Rendering, "FPS: %f\n", framesPerSecond);
+			Log::DebugPrintF(0, Log::Rendering, "CurrentTime: %f\n", Time::CurrentTime());
 		}
 		Shutdown();
 		return 0;
@@ -49,6 +67,7 @@ namespace Venture {
 		Venture::Log::SetVerbosity(3);
 		Venture::Log::openLogFiles();
 		Input::Init();
+		Time::Init();
 
 		m_renderManager.Init(m_window.GetHandle());
 		return 0;
@@ -65,12 +84,17 @@ namespace Venture {
 		// Handle Venture events
 		EventSystem::DispatchEvents();
 
+		GameObject* cube = new GameObject();
+		GameObjectHandle handle(*cube);
+
 		// Update all GameObjects
 		GameObject** gameObjects = GameObject::GetAllGameObjects();
 		int maxGameObjects = GameObject::GetMaxGameObjects();
 		for (int i = 0; i < maxGameObjects; i++) {
-			GameObject* gameObject = gameObjects[i];
-			gameObject->Update();
+			if (gameObjects[i] != nullptr) {
+				GameObject* gameObject = gameObjects[i];
+				gameObject->Update();
+			}
 		}
 		return 0;
 	}

@@ -21,7 +21,7 @@ namespace Venture {
 		friend class GameObjectHandle;
 	public:
 		GameObject() : m_uniqueID(GetUniqueID()), m_handleIndex(GetNewHandleIndex(this)) {
-
+			m_components = std::list<Component*>();
 		}
 		~GameObject() {
 			for (Component* c : m_components) {
@@ -33,13 +33,19 @@ namespace Venture {
 			m_components.push_back(component);
 		}
 		void Update() {
-
+			for (Component* c : m_components) {
+				c->Update();
+			}
 		}
 		void EarlyUpdate() {
-
+			for (Component* c : m_components) {
+				c->EarlyUpdate();
+			}
 		}
 		void LateUpdate() {
-
+			for (Component* c : m_components) {
+				c->LateUpdate();
+			}
 		}
 		static GameObject** GetAllGameObjects() {
 			return gameObjectTable;

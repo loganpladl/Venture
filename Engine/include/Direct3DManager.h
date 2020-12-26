@@ -12,7 +12,7 @@ namespace Venture {
 		int Init(HWND window);
 		void Present();
 		void ClearBuffer(float red, float green, float blue);
-		void Triangle();
+		void Triangle(float angle);
 	private:
 		ID3D11Device* m_device = nullptr;
 		ID3D11DeviceContext* m_context = nullptr;
@@ -21,5 +21,6 @@ namespace Venture {
 		IDXGISwapChain* m_swapChain = nullptr;
 		HWND m_window;
 		ID3D11RenderTargetView* m_renderTargetView = nullptr;
+		ID3D11DepthStencilView* m_depthStencilView = nullptr;
 	};
 }

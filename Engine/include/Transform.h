@@ -8,7 +8,6 @@ namespace Venture {
 	public:
 		Transform() : Component(ComponentType::Transform),
 			position(0,0,0), rotation(1,0,0,0), scale(1,1,1) {
-			
 		}
 	private:
 		DirectX::XMFLOAT3 position;

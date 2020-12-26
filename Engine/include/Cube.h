@@ -1,9 +1,10 @@
 #pragma once
 #include "Vertex.h"
+#include "Mesh.h"
 
 // Cube with clockwise winding order, left handed coordinate system
 namespace Venture {
-	class Cube {
+	class Cube : public Mesh {
 	public:
 		Cube(float sideLength) {
 			float vertexPos = sideLength / 2;

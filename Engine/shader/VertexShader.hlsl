@@ -3,10 +3,14 @@ struct VertexOut {
 	float3 color : COLOR;
 };
 
-VertexOut main(float2 pos : POSITION, float3 color : COLOR)
+cbuffer CBuf {
+	matrix transform;
+};
+
+VertexOut main(float3 pos : POSITION, float3 color : COLOR)
 {
 	VertexOut vOut;
-	vOut.pos = float4(pos.x, pos.y, 0.0f, 1.0f);
+	vOut.pos = mul(float4(pos.x, pos.y, pos.z, 1.0f), transform);
 	vOut.color = color;
 	return vOut;
 }

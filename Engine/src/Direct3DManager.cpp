@@ -1,6 +1,12 @@
 #include "../include/Direct3DManager.h"
 #include "../include/FileSystem.h"
 #include "../include/Buffer.h"
+#include <cmath>
+#include <DirectxMath.h>
+#include "../include/Mesh.h"
+#include "../include/Vertex.h"
+#include "../include/VertexShader.h"
+#include "../include/PixelShader.h"
 
 namespace Venture {
 	Direct3DManager::Direct3DManager() {
@@ -43,10 +49,10 @@ namespace Venture {
 		// No antialiasing for now
 		swapChainDescription.SampleDesc.Quality = 0;
 		swapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		swapChainDescription.BufferCount = 1;
+		swapChainDescription.BufferCount = 2;
 		swapChainDescription.OutputWindow = m_window;
 		swapChainDescription.Windowed = TRUE;
-		swapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+		swapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 		swapChainDescription.Flags = 0;
 
 
@@ -71,6 +77,49 @@ namespace Venture {
 			m_device->CreateRenderTargetView(backBuffer, nullptr, &m_renderTargetView);
 		}
 		backBuffer->Release();
+
+		// Depth-stencil state
+		D3D11_DEPTH_STENCIL_DESC dsDesc = {};
+		dsDesc.DepthEnable = TRUE;
+		dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
+		ID3D11DepthStencilState* pDSState;
+		m_device->CreateDepthStencilState(&dsDesc, &pDSState);
+
+		// Bind depth state
+		m_context->OMSetDepthStencilState(pDSState, 1u);
+
+		// Depth-stencil texture
+		ID3D11Texture2D* pDepthStencil;
+		D3D11_TEXTURE2D_DESC depthDesc = {};
+		// Match height and width of swap chain
+		DXGI_SWAP_CHAIN_DESC pSCDesc;
+		m_swapChain->GetDesc(&pSCDesc);
+		depthDesc.Width = pSCDesc.BufferDesc.Width;
+		depthDesc.Height = pSCDesc.BufferDesc.Height;
+		depthDesc.MipLevels = 1u;
+		depthDesc.ArraySize = 1u;
+		depthDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		depthDesc.SampleDesc.Count = 1u;
+		depthDesc.SampleDesc.Quality = 0u;
+		depthDesc.Usage = D3D11_USAGE_DEFAULT;
+		depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+
+		m_device->CreateTexture2D(&depthDesc, nullptr, &pDepthStencil);
+
+		D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+		dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		dsvDesc.Texture2D.MipSlice = 0u;
+
+		if (pDepthStencil != nullptr) {
+			m_device->CreateDepthStencilView(pDepthStencil, &dsvDesc, &m_depthStencilView);
+		}
+		else {
+			// TODO: Handle error if depth stencil texture was not successfully created
+		}
+		
+		m_context->OMSetRenderTargets(1u, &m_renderTargetView, m_depthStencilView);
 
 		if (FAILED(result)) {
 			// Handle potential device creation failure
@@ -99,100 +148,99 @@ namespace Venture {
 	void Direct3DManager::ClearBuffer(float red, float green, float blue) {
 		const float color[] = { red, green, blue, 1.0f };
 		m_context->ClearRenderTargetView(m_renderTargetView, color);
+		m_context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0u);
 	}
 
-	void Direct3DManager::Triangle() {
-		struct Vertex {
-			float x;
-			float y;
-			unsigned char r;
-			unsigned char g;
-			unsigned char b;
-			unsigned char a;
+	void Direct3DManager::Triangle(float angle) {
+		float vertexPos = 1;
+		std::vector<Vertex> vertices = {
+			{ vertexPos, vertexPos, vertexPos,  	0, 0, 0},
+			{ -vertexPos, vertexPos, vertexPos,		255, 0, 0 },
+			{ vertexPos, -vertexPos, vertexPos,		0, 255, 0},
+			{ vertexPos, vertexPos, -vertexPos,		255, 255, 0},
+			{ -vertexPos, -vertexPos, vertexPos,	0, 0, 255},
+			{ vertexPos, -vertexPos, -vertexPos,	255, 0, 255},
+			{ -vertexPos, vertexPos, -vertexPos,	0, 255, 255},
+			{ -vertexPos, -vertexPos, -vertexPos,	255, 255, 255}
 		};
 
-		Vertex vertices[] = {
-			{0.0f, .5f, 255, 0, 0, 255},
-			{.5f, -.5f, 0, 255, 0, 255},
-			{-.5f, -.5f, 0, 0, 255, 255}
+		std::vector<int> indices = {
+			0, 3, 1,	//top face
+			3, 6, 1,	//top face
+			3, 5, 6,	//front face
+			5, 7, 6,	//front face
+			0, 2, 3,	// right face
+			2, 5, 3,	// right face
+			1, 6, 4,	// left face
+			6, 7, 4,	// left face
+			0, 1, 2,	// back face
+			1, 4, 2,	// back face
+			2, 4, 5,	// bottom face
+			4, 7, 5,	// bottom face
 		};
-		int indices[] = {
-			0, 1, 2
-		};
 
-		ID3D11Buffer* pVertexBuffer;
-		D3D11_BUFFER_DESC bufferDesc = {};
-		bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		bufferDesc.CPUAccessFlags = 0u;
-		bufferDesc.MiscFlags = 0u;
-		bufferDesc.ByteWidth = sizeof(vertices);
-		bufferDesc.StructureByteStride = sizeof(Vertex);
-		D3D11_SUBRESOURCE_DATA subData = {};
-		subData.pSysMem = vertices;
-		m_device->CreateBuffer(&bufferDesc, &subData, &pVertexBuffer);
+		Mesh mesh(vertices, indices);
 
-		// Bind vertex buffer
-		const UINT stride = sizeof(Vertex);
-		const UINT offset = 0;
-		m_context->IASetVertexBuffers(0u, 1u, &pVertexBuffer, &stride, &offset);
-
-		// Index Buffer
-		ID3D11Buffer* pIndexBuffer;
-		D3D11_BUFFER_DESC indexBufferDesc = {};
-		indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		indexBufferDesc.CPUAccessFlags = 0u;
-		indexBufferDesc.MiscFlags = 0u;
-		indexBufferDesc.ByteWidth = sizeof(indices);
-		indexBufferDesc.StructureByteStride = sizeof(int);
-		D3D11_SUBRESOURCE_DATA indexSubData = {};
-		indexSubData.pSysMem = indices;
-		m_device->CreateBuffer(&indexBufferDesc, &indexSubData, &pIndexBuffer);
-
-		// Bind index buffer
-		m_context->IASetIndexBuffer(pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+		mesh.CreateBuffers(m_device);
+		mesh.BindBuffers(m_context);
 
 		// Vertex shader
-		ID3D11VertexShader* pVertexShader;
-		
-		File::AsyncOpenReadCloseRequest* request = FileSystem::AsyncOpenReadCloseFile("VertexShader.cso", "rb");
-		request->Wait();
-		Buffer vertexBuffer = request->GetBuffer();
-		size_t vertexBufferSize = request->GetBufferSize();
-		m_device->CreateVertexShader(vertexBuffer.GetBuffer(), vertexBufferSize, nullptr, &pVertexShader);
-		// Bind vertex shader 
-		m_context->VSSetShader(pVertexShader, nullptr, 0);
+		VertexShader vs("VertexShader.cso", m_device, m_context);
+
+		vs.Bind();
+
+		// Constant buffer
+		struct ConstantBuffer {
+			DirectX::XMFLOAT4X4 transform;
+		};
+		ConstantBuffer cb;
+
+		DirectX::XMMATRIX mat = DirectX::XMMatrixTranspose(
+			DirectX::XMMatrixRotationZ(angle) *
+			DirectX::XMMatrixRotationX(angle) *
+			DirectX::XMMatrixTranslation(0.0f, 0.0f, 4.0f) *
+			DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f/4.0f, 0.5f, 10.0f)
+		);
+		DirectX::XMStoreFloat4x4(&cb.transform, mat);
+
+		ID3D11Buffer* pConstBuffer;
+		D3D11_BUFFER_DESC cbd;
+		cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		cbd.Usage = D3D11_USAGE_DYNAMIC;
+		cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		cbd.MiscFlags = 0u;
+		cbd.ByteWidth = sizeof(cb);
+		cbd.StructureByteStride = 0u;
+		D3D11_SUBRESOURCE_DATA csd = {};
+		csd.pSysMem = &cb;
+		m_device->CreateBuffer(&cbd, &csd, &pConstBuffer);
+
+		// bind constant buffer to vertex shader
+		m_context->VSSetConstantBuffers(0u, 1u, &pConstBuffer);
 
 		// Pixel shader
-		ID3D11PixelShader* pPixelShader;
-
-		request = FileSystem::AsyncOpenReadCloseFile("PixelShader.cso", "rb");
-		request->Wait();
-		Buffer pixelBuffer = request->GetBuffer();
-		size_t pixelBufferSize = request->GetBufferSize();
-		m_device->CreatePixelShader(pixelBuffer.GetBuffer(), pixelBufferSize, nullptr, &pPixelShader);
-		// Bind pixel shader
-		m_context->PSSetShader(pPixelShader, nullptr, 0);
+		PixelShader ps("PixelShader.cso", m_device, m_context);
+		ps.Bind();
 
 		// Input vertex layout
 		ID3D11InputLayout* pInputLayout;
 		const D3D11_INPUT_ELEMENT_DESC layout[] = {
-			{"POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			{"COLOR", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 8u, D3D11_INPUT_PER_VERTEX_DATA, 0}
+			{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			{"COLOR", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 12u, D3D11_INPUT_PER_VERTEX_DATA, 0}
 		};
 		m_device->CreateInputLayout(
 			layout, 
 			sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), 
-			vertexBuffer.GetBuffer(), 
-			vertexBufferSize, 
+			vs.GetBytecode(), 
+			vs.GetBytecodeSize(), 
 			&pInputLayout
 		);
 
 		m_context->IASetInputLayout(pInputLayout);
 
 		// Bind render target
-		m_context->OMSetRenderTargets(1u, &m_renderTargetView, nullptr);
+		// Note: Must repeat every frame since we're using DXGI_SWAP_EFFECT_FLIP_DISCARD
+		m_context->OMSetRenderTargets(1u, &m_renderTargetView, m_depthStencilView);
 
 		// Viewport configuration
 		D3D11_VIEWPORT vp;
@@ -206,14 +254,10 @@ namespace Venture {
 
 		m_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		int numVertices = sizeof(vertices) / sizeof(Vertex);
-		int numIndices = sizeof(indices) / sizeof(int);
+		int numIndices = mesh.NumIndices();
 		m_context->DrawIndexed(numIndices, 0u, 0u);
 
-		pVertexBuffer->Release();
-		pIndexBuffer->Release();
-		pVertexShader->Release();
-		pPixelShader->Release();
 		pInputLayout->Release();
+		pConstBuffer->Release();
 	}
 }
