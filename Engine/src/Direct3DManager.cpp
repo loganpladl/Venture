@@ -8,6 +8,9 @@
 #include "../include/VertexShader.h"
 #include "../include/PixelShader.h"
 
+//temp
+#include "../include/Time.h"
+
 namespace Venture {
 	Direct3DManager::Direct3DManager() {
 		m_featureLevel = D3D_FEATURE_LEVEL_11_1; //default
@@ -151,7 +154,7 @@ namespace Venture {
 		m_context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0u);
 	}
 
-	void Direct3DManager::Triangle(float angle) {
+	void Direct3DManager::DrawMesh(Mesh mesh) {
 		float vertexPos = 1;
 		std::vector<Vertex> vertices = {
 			{ vertexPos, vertexPos, vertexPos,  	0, 0, 0},
@@ -179,7 +182,7 @@ namespace Venture {
 			4, 7, 5,	// bottom face
 		};
 
-		Mesh mesh(vertices, indices);
+		//Mesh mesh(vertices, indices);
 
 		mesh.CreateBuffers(m_device);
 		mesh.BindBuffers(m_context);
@@ -194,6 +197,8 @@ namespace Venture {
 			DirectX::XMFLOAT4X4 transform;
 		};
 		ConstantBuffer cb;
+
+		float angle = static_cast<float>(Time::CurrentTime());
 
 		DirectX::XMMATRIX mat = DirectX::XMMatrixTranspose(
 			DirectX::XMMatrixRotationZ(angle) *

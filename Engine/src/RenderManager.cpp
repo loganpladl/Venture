@@ -1,6 +1,8 @@
 #include "../include/RenderManager.h"
 #include "../include/Time.h"
 
+#include "../include/DefaultMeshes.h"
+
 namespace Venture {
 	RenderManager::RenderManager() {
 		m_window = nullptr;
@@ -14,7 +16,7 @@ namespace Venture {
 
 	void RenderManager::Render() {
 		m_direct3DManager.ClearBuffer(0.0f, 0.0f, 0.0f);
-		m_direct3DManager.Triangle(static_cast<float>(Time::CurrentTime()));
+		m_direct3DManager.DrawMesh(DefaultMeshes::GetNewCube());
 		m_direct3DManager.Present();
 	}
 }

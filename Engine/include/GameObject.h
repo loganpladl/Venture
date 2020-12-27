@@ -6,6 +6,7 @@
 namespace Venture {
 	// Forward declarations
 	class GameObject;
+	class GameObjectHandle;
 	static int GetUniqueID();
 	static int GetNewHandleIndex(GameObject* gameObject);
 	static void FreeHandleIndex(int index);
@@ -20,39 +21,24 @@ namespace Venture {
 		std::list<Component*> m_components;
 		friend class GameObjectHandle;
 	public:
-		GameObject() : m_uniqueID(GetUniqueID()), m_handleIndex(GetNewHandleIndex(this)) {
-			m_components = std::list<Component*>();
-		}
-		~GameObject() {
-			for (Component* c : m_components) {
-				delete c;
-			}
-			FreeHandleIndex(m_handleIndex);
-		}
-		void AddComponent(Component* component) {
-			m_components.push_back(component);
-		}
-		void Update() {
-			for (Component* c : m_components) {
-				c->Update();
-			}
-		}
-		void EarlyUpdate() {
-			for (Component* c : m_components) {
-				c->EarlyUpdate();
-			}
-		}
-		void LateUpdate() {
-			for (Component* c : m_components) {
-				c->LateUpdate();
-			}
-		}
-		static GameObject** GetAllGameObjects() {
-			return gameObjectTable;
-		}
-		static int GetMaxGameObjects() {
-			return MAX_GAME_OBJECTS;
-		}
+		GameObject();
+		~GameObject();
+
+		void AddComponent(Component* component);
+
+		void Update();
+
+		void EarlyUpdate();
+
+		void LateUpdate();
+
+		static GameObject** GetAllGameObjects();
+
+		static int GetMaxGameObjects();
+
+		static GameObjectHandle Create();
+
+		void Destroy();
 	};
 
 	static int nextUniqueID = 0;
@@ -83,18 +69,7 @@ namespace Venture {
 		int m_uniqueID;
 		int m_handleIndex;
 	public:
-		explicit GameObjectHandle(GameObject& object) :
-			m_uniqueID(object.m_uniqueID),
-			m_handleIndex(object.m_handleIndex) {
-		}
-		GameObject* GetObject() {
-			GameObject* object = gameObjectTable[m_handleIndex];
-			if (object != nullptr && object->m_uniqueID == m_uniqueID) {
-				return object;
-			}
-			return nullptr;
-		}
+		explicit GameObjectHandle(GameObject& object);
+		GameObject* GetObject();
 	};
-
-	
 }

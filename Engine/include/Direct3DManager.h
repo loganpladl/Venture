@@ -1,6 +1,7 @@
 #pragma once
 
 #include <d3d11.h>
+#include "Mesh.h"
 
 namespace Venture {
 	class Direct3DManager {
@@ -12,7 +13,7 @@ namespace Venture {
 		int Init(HWND window);
 		void Present();
 		void ClearBuffer(float red, float green, float blue);
-		void Triangle(float angle);
+		void DrawMesh(Mesh mesh);
 	private:
 		ID3D11Device* m_device = nullptr;
 		ID3D11DeviceContext* m_context = nullptr;

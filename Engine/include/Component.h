@@ -3,6 +3,9 @@
 #include "Event.h"
 
 namespace Venture {
+	// Forward declaration
+	class GameObject;
+
 	enum ComponentType {
 		Transform,
 		MeshInstance
@@ -10,7 +13,8 @@ namespace Venture {
 	class Component {
 	protected:
 		ComponentType m_type;
-		Component(ComponentType type) : m_type(type) {}
+		GameObject* m_parentObject;
+		Component(ComponentType type, GameObject* parent) : m_type(type), m_parentObject(parent) {}
 	public:
 		virtual void Update() = 0;
 		virtual void EarlyUpdate() = 0;
