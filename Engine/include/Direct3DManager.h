@@ -2,6 +2,7 @@
 
 #include <d3d11.h>
 #include "Mesh.h"
+#include <DirectXMath.h>
 
 namespace Venture {
 	class Direct3DManager {
@@ -14,6 +15,7 @@ namespace Venture {
 		void Present();
 		void ClearBuffer(float red, float green, float blue);
 		void DrawMesh(Mesh mesh);
+		void UpdateViewTransform(DirectX::XMFLOAT4X4 newTransform);
 	private:
 		ID3D11Device* m_device = nullptr;
 		ID3D11DeviceContext* m_context = nullptr;
@@ -23,5 +25,6 @@ namespace Venture {
 		HWND m_window;
 		ID3D11RenderTargetView* m_renderTargetView = nullptr;
 		ID3D11DepthStencilView* m_depthStencilView = nullptr;
+		DirectX::XMFLOAT4X4 m_viewTransform;
 	};
 }

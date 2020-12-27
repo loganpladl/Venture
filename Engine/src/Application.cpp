@@ -5,8 +5,9 @@
 #include "../include/Input.h"
 #include "../include/FileSystem.h"
 #include "../include/Time.h"
-#include "../GameObject.h"
+#include "../include/GameObject.h"
 
+#include "../include/DefaultGameObjects.h"
 
 
 namespace Venture {
@@ -68,6 +69,9 @@ namespace Venture {
 		Venture::Log::openLogFiles();
 		Input::Init();
 		Time::Init();
+
+		//Create camera
+		DefaultGameObjects::GetNewFPSCamera();
 
 		m_renderManager.Init(m_window.GetHandle());
 		return 0;

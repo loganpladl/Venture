@@ -47,7 +47,7 @@ namespace Venture {
 		m_uniqueID(object.m_uniqueID),
 		m_handleIndex(object.m_handleIndex) {
 	}
-	GameObject* GameObjectHandle::GetObject() {
+	GameObject* GameObjectHandle::Get() {
 		GameObject* object = gameObjectTable[m_handleIndex];
 		if (object != nullptr && object->m_uniqueID == m_uniqueID) {
 			return object;

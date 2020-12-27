@@ -4,6 +4,9 @@
 #include "../include/DefaultMeshes.h"
 
 namespace Venture {
+	// TODO: Decide whether to make everything static or not
+	DirectX::XMFLOAT4X4 RenderManager::m_viewTransform;
+
 	RenderManager::RenderManager() {
 		m_window = nullptr;
 		m_direct3DManager;
@@ -15,6 +18,7 @@ namespace Venture {
 	}
 
 	void RenderManager::Render() {
+		m_direct3DManager.UpdateViewTransform(m_viewTransform);
 		m_direct3DManager.ClearBuffer(0.0f, 0.0f, 0.0f);
 		m_direct3DManager.DrawMesh(DefaultMeshes::GetNewCube());
 		m_direct3DManager.Present();

@@ -8,7 +8,8 @@ namespace Venture {
 
 	enum ComponentType {
 		Transform,
-		MeshInstance
+		MeshInstance,
+		Camera
 	};
 	class Component {
 	protected:
@@ -16,11 +17,11 @@ namespace Venture {
 		GameObject* m_parentObject;
 		Component(ComponentType type, GameObject* parent) : m_type(type), m_parentObject(parent) {}
 	public:
-		virtual void Update() = 0;
-		virtual void EarlyUpdate() = 0;
-		virtual void LateUpdate() = 0;
+		virtual void Update() {};
+		virtual void EarlyUpdate() {};
+		virtual void LateUpdate() {};
 		inline ComponentType GetType() { return m_type; }
 		inline bool IsType(ComponentType type) { return type == m_type; }
-		virtual void ReceiveEvents(Event event);
+		virtual void ReceiveEvents(Event event) {};
 	};
 }

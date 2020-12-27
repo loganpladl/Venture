@@ -70,6 +70,6 @@ namespace Venture {
 		int m_handleIndex;
 	public:
 		explicit GameObjectHandle(GameObject& object);
-		GameObject* GetObject();
+		GameObject* Get();
 	};
 }

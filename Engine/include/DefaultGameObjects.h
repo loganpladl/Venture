@@ -12,5 +12,6 @@ namespace Venture {
 		};
 	public:
 		static GameObjectHandle GetNewCube();
+		static GameObjectHandle GetNewFPSCamera();
 	};
 }

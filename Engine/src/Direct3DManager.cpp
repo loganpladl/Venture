@@ -200,11 +200,15 @@ namespace Venture {
 
 		float angle = static_cast<float>(Time::CurrentTime());
 
+		// Load view transform
+		DirectX::XMMATRIX view = DirectX::XMLoadFloat4x4(&m_viewTransform);
+
 		DirectX::XMMATRIX mat = DirectX::XMMatrixTranspose(
 			DirectX::XMMatrixRotationZ(angle) *
 			DirectX::XMMatrixRotationX(angle) *
 			DirectX::XMMatrixTranslation(0.0f, 0.0f, 4.0f) *
-			DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f/4.0f, 0.5f, 10.0f)
+			view *
+			DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f/4.0f, 0.5f, 25.0f)
 		);
 		DirectX::XMStoreFloat4x4(&cb.transform, mat);
 
@@ -264,5 +268,9 @@ namespace Venture {
 
 		pInputLayout->Release();
 		pConstBuffer->Release();
+	}
+
+	void Direct3DManager::UpdateViewTransform(DirectX::XMFLOAT4X4 newTransform) {
+		m_viewTransform = newTransform;
 	}
 }

@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Buffer.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\DefaultGameObjects.cpp" />
     <ClCompile Include="src\DefaultMeshes.cpp" />
     <ClCompile Include="src\Direct3DManager.cpp" />
@@ -156,6 +157,7 @@
     <ClCompile Include="src\EventSystem.cpp" />
     <ClCompile Include="src\File.cpp" />
     <ClCompile Include="src\FileSystem.cpp" />
+    <ClCompile Include="src\FPSCamera.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\Keyboard.cpp" />
@@ -173,6 +175,7 @@
   <ItemGroup>
     <ClInclude Include="include\Application.h" />
     <ClInclude Include="include\Buffer.h" />
+    <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\CircularQueue.h" />
     <ClInclude Include="include\Component.h" />
     <ClInclude Include="include\Cube.h" />
@@ -184,6 +187,7 @@
     <ClInclude Include="include\EventSystem.h" />
     <ClInclude Include="include\File.h" />
     <ClInclude Include="include\FileSystem.h" />
+    <ClInclude Include="include\FPSCamera.h" />
     <ClInclude Include="include\GameObject.h" />
     <ClInclude Include="include\Input.h" />
     <ClInclude Include="include\Keyboard.h" />
