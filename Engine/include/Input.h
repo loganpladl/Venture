@@ -25,5 +25,6 @@ namespace Venture {
 		static RightMouseReleasedEvent* RightMouseReleased(int x, int y);
 		static MiddleMousePressedEvent* MiddleMousePressed(int x, int y);
 		static MiddleMouseReleasedEvent* MiddleMouseReleased(int x, int y);
+		static MouseDeltaEvent* MouseDelta(int x, int y);
 	};
 }

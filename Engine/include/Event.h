@@ -14,9 +14,10 @@ namespace Venture {
 		MouseScrollUp,
 		MouseScrollDown,
 		MouseEnter,
-		MouseLeave
+		MouseLeave,
+		MouseDelta
 	};
-	const int NUM_EVENT_TYPES = 13;
+	const int NUM_EVENT_TYPES = 14;
 
 	class Event {
 	protected:

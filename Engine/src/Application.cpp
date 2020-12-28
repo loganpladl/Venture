@@ -54,8 +54,6 @@ namespace Venture {
 				renderedFrames = 0;
 				secondTimer = 0;
 			}
-			//Log::DebugPrintF(0, Log::Rendering, "FPS: %f\n", framesPerSecond);
-			Log::DebugPrintF(0, Log::Rendering, "CurrentTime: %f\n", Time::CurrentTime());
 		}
 		Shutdown();
 		return 0;

@@ -26,5 +26,6 @@ namespace Venture {
 		int m_width;
 		int m_height;
 		bool m_windowHasFocus;
+		bool m_mouseCentered;
 	};
 }

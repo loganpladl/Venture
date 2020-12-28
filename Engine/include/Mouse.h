@@ -78,5 +78,12 @@ namespace Venture {
 		static inline void MouseLeaveWindow() {
 			m_mouseInWindow = false;
 		}
+
+		static inline int GetX() {
+			return m_x;
+		}
+		static inline int GetY() {
+			return m_y;
+		}
 	};
 }

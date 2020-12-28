@@ -63,4 +63,9 @@ namespace Venture {
 		EventSystem::Enqueue(event);
 		return event;
 	}
+	MouseDeltaEvent* Input::MouseDelta(int x, int y) {
+		MouseDeltaEvent* event = new MouseDeltaEvent(x, y);
+		EventSystem::Enqueue(event);
+		return event;
+	}
 }

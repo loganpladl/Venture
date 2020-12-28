@@ -71,4 +71,10 @@ namespace Venture {
 	public:
 		MouseLeaveEvent() : MouseEvent(MouseLeave) {}
 	};
+
+	// Raw input to be used with FPS camera
+	class MouseDeltaEvent : public MouseEvent {
+	public:
+		MouseDeltaEvent(int x, int y) : MouseEvent(MouseDelta, x, y) {}
+	};
 }

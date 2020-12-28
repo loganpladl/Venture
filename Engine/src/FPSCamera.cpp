@@ -10,26 +10,31 @@ using namespace DirectX;
 
 namespace Venture {
 	FPSCamera::FPSCamera(GameObject* parent) : Camera(parent),
-		m_position(0,0,0), m_direction(0,0,1), m_up(0,1,0), m_pitch(0), m_yaw(0), m_speed(10) {
-
+		m_position(0,0,0), m_direction(0,0,1), m_up(0,1,0), m_pitch(0), m_yaw(90), 
+		m_moveSpeed(5), m_lookSpeed(3),
+		m_mouseDeltaEventHandler(*this){
+		EventSystem::RegisterHandler(&m_mouseDeltaEventHandler, EventType::MouseDelta);
 	}
 
 	void FPSCamera::Update() {
+		// Update direction changes accrued by event handler
+		UpdateDirection();
+
 		XMVECTOR dir = XMLoadFloat3(&m_direction);
 		XMVECTOR up = XMLoadFloat3(&m_up);
 		XMVECTOR pos = XMLoadFloat3(&m_position);
 
 		if (Keyboard::IsButtonPressed(Keyboard::KeyCode::W)) {
-			pos += dir * m_speed * static_cast<float>(Time::DeltaTime());
+			pos += dir * m_moveSpeed * static_cast<float>(Time::DeltaTime());
 		}
 		if (Keyboard::IsButtonPressed(Keyboard::KeyCode::A)) {
-			pos -= XMVector3Normalize(XMVector3Cross(up, dir)) * m_speed * static_cast<float>(Time::DeltaTime());
+			pos -= XMVector3Normalize(XMVector3Cross(up, dir)) * m_moveSpeed * static_cast<float>(Time::DeltaTime());
 		}
 		if (Keyboard::IsButtonPressed(Keyboard::KeyCode::S)) {
-			pos -= dir * m_speed * static_cast<float>(Time::DeltaTime());
+			pos -= dir * m_moveSpeed * static_cast<float>(Time::DeltaTime());
 		}
 		if (Keyboard::IsButtonPressed(Keyboard::KeyCode::D)) {
-			pos += XMVector3Normalize(XMVector3Cross(up, dir)) * m_speed * static_cast<float>(Time::DeltaTime());
+			pos += XMVector3Normalize(XMVector3Cross(up, dir)) * m_moveSpeed * static_cast<float>(Time::DeltaTime());
 		}
 		XMStoreFloat3(&m_position, pos);
 
@@ -40,7 +45,7 @@ namespace Venture {
 		float yawRadians = DirectX::XMConvertToRadians(m_yaw);
 		float pitchRadians = DirectX::XMConvertToRadians(m_pitch);
 		m_direction.x = cos(yawRadians) * cos(pitchRadians);
-		m_direction.x = sin(pitchRadians);
+		m_direction.y = sin(pitchRadians);
 		m_direction.z = sin(yawRadians) * cos(pitchRadians);
 
 		DirectX::XMVECTOR vec = DirectX::XMLoadFloat3(&m_direction);
@@ -59,5 +64,11 @@ namespace Venture {
 		return result;
 	}
 
+	void FPSCamera::MouseDeltaEventHandler::Handle(Event* event) {
+		MouseDeltaEvent* mouseDeltaEvent = dynamic_cast<MouseDeltaEvent*>(event);
+		std::pair<int, int> pos = mouseDeltaEvent->GetPosition();
+		m_camera.m_yaw += -pos.first * m_camera.m_lookSpeed * static_cast<float>(Time::DeltaTime());
+		m_camera.m_pitch += -pos.second * m_camera.m_lookSpeed * static_cast<float>(Time::DeltaTime());
+	}
 
 }

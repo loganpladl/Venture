@@ -57,6 +57,7 @@ namespace Venture {
 		void EnableChannel(Channel channel);
 		void DisableChannel(Channel channel);
 
+		// TODO: Seems to print garbage values if given too few arguments
 		int DebugPrintF(int verbosity, Channel channel, const char* format, ...);
 	}
 }

@@ -1,5 +1,7 @@
 #include "../include/Window.h"
 
+#include <hidusage.h>
+
 namespace Venture {
 	Window::Window() {
 		m_instance = GetModuleHandle(NULL);
@@ -42,6 +44,7 @@ namespace Venture {
 				return HRESULT_FROM_WIN32(error);
 			}
 		}
+
 		return 0;
 	}
 
@@ -73,6 +76,17 @@ namespace Venture {
 			DWORD error = GetLastError();
 			return HRESULT_FROM_WIN32(error);
 		}
+
+		// Register moues as raw input device to be able to use WM_INPUT
+		// TODO: Find cleaner spot for this
+		RAWINPUTDEVICE Rid[1];
+		Rid[0].usUsagePage = HID_USAGE_PAGE_GENERIC;
+		Rid[0].usUsage = HID_USAGE_GENERIC_MOUSE;
+		//Rid[0].dwFlags = RIDEV_INPUTSINK;
+		Rid[0].dwFlags = 0;
+		Rid[0].hwndTarget = m_window;
+		RegisterRawInputDevices(Rid, 1, sizeof(Rid[0]));
+		// TODO: Check for failure
 
 		return 0;
 	}
@@ -199,6 +213,16 @@ namespace Venture {
 					break;
 				}
 				const POINTS point = MAKEPOINTS(lParam);
+				/*
+				// If mouse is locked to center
+				if (m_mouseCentered) {
+					Input::MouseMove(point.x, point.y);
+					// Get point in screen space to set cursor position
+					POINT screenPoint = { m_width / 2, m_height / 2 };
+					ClientToScreen(m_window, &screenPoint);
+					SetCursorPos(screenPoint.x, screenPoint.y);
+				}
+				*/
 				// Check if mouse is in window, create move event if so
 				if (point.x >= 0 && point.x < m_width && point.y >= 0 && point.y < m_height) {
 					// If mouse was not previously in window, create enter event
@@ -262,6 +286,31 @@ namespace Venture {
 				Mouse::MouseScrolled(point.x, point.y, delta);
 				break;
 			}
+			case WM_INPUT:
+			{
+				Log::DebugPrintF(0, Log::Input, "WM_INPUT Event\n");
+				UINT dwSize = sizeof(RAWINPUT);
+				static BYTE lpb[sizeof(RAWINPUT)];
+
+				GetRawInputData((HRAWINPUT)lParam, RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER));
+
+				RAWINPUT* raw = (RAWINPUT*)lpb;
+
+				if (raw->header.dwType == RIM_TYPEMOUSE)
+				{
+					RAWMOUSE rawMouse = raw->data.mouse;
+					if ((rawMouse.usFlags & MOUSE_MOVE_RELATIVE) == MOUSE_MOVE_RELATIVE) {
+						int xPosRelative = raw->data.mouse.lLastX;
+						int yPosRelative = raw->data.mouse.lLastY;
+						// Don't make events for clicks
+						if (xPosRelative != 0 || yPosRelative != 0) {
+							Input::MouseDelta(xPosRelative, yPosRelative);
+							Log::DebugPrintF(0, Log::Input, "X delta:%i, Y delta:%i\n", xPosRelative, yPosRelative);
+						}
+					}
+				}
+				break;
+			}
 			default: {
 				result = DefWindowProc(window, message, wParam, lParam);
 				break;
@@ -296,24 +345,37 @@ namespace Venture {
 		bool gotMsg;
 		MSG msg;
 
-		// Process window events
-		gotMsg = PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE) != 0;
-
-		if (gotMsg) {
+		// Process all window events
+		while (gotMsg = PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE) != 0) {
 			if (WM_QUIT == msg.message) {
 				return false;
 			}
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+
 		return true;
 	}
 
 	void Window::GainFocus() {
 		m_windowHasFocus = true;
+		/*
+		if (m_mouseCentered == false) {
+			// TODO: Temp method of locking mouse to center
+			m_mouseCentered = true;
+			//ShowCursor(FALSE);
+		}
+		*/
 	}
 
 	void Window::LoseFocus() {
 		m_windowHasFocus = false;
+		/*
+		if (m_mouseCentered == true) {
+			// TODO: Temp method of unlocking mouse
+			m_mouseCentered = false;
+			//ShowCursor(TRUE);
+		}
+		*/
 	}
 }
