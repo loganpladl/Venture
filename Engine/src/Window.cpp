@@ -11,6 +11,7 @@ namespace Venture {
 		m_width = 640;
 		m_height = 480;
 		m_windowHasFocus = false;
+		m_mouseConfined = false;
 	}
 
 	int Window::Init() {
@@ -76,6 +77,8 @@ namespace Venture {
 			DWORD error = GetLastError();
 			return HRESULT_FROM_WIN32(error);
 		}
+
+		//GetWindowRect(m_window, &m_windowRect);
 
 		// Register moues as raw input device to be able to use WM_INPUT
 		// TODO: Find cleaner spot for this
@@ -143,6 +146,11 @@ namespace Venture {
 
 		switch (message) {
 			case WM_SIZE: {
+				ResizeClipRect();
+				break;
+			}
+			case WM_MOVE: {
+				ResizeClipRect();
 				break;
 			}
 			case WM_CLOSE: {
@@ -150,7 +158,7 @@ namespace Venture {
 				break;
 			}
 			case WM_KILLFOCUS: {
-				// clear pressed keystates
+				// TODO: clear pressed keystates
 				break;
 			}
 			case WM_DESTROY: {
@@ -193,6 +201,15 @@ namespace Venture {
 				if (keyCode != Keyboard::Unassigned && prevState == 0) {
 					Input::KeyPressed(keyCode);
 				}
+				// NOTE: Maybe do this through event system instead of here
+				// Free cursor if user presses escape in first person mode
+				// Close window if user presses escape in normal use
+				if (keyCode == Keyboard::Escape && m_mouseConfined) {
+					FreeCursor();
+				}
+				else if (keyCode == Keyboard::Escape && !m_mouseConfined) {
+					Destroy();
+				}
 				break;
 			}
 			case WM_KEYUP:
@@ -213,16 +230,6 @@ namespace Venture {
 					break;
 				}
 				const POINTS point = MAKEPOINTS(lParam);
-				/*
-				// If mouse is locked to center
-				if (m_mouseCentered) {
-					Input::MouseMove(point.x, point.y);
-					// Get point in screen space to set cursor position
-					POINT screenPoint = { m_width / 2, m_height / 2 };
-					ClientToScreen(m_window, &screenPoint);
-					SetCursorPos(screenPoint.x, screenPoint.y);
-				}
-				*/
 				// Check if mouse is in window, create move event if so
 				if (point.x >= 0 && point.x < m_width && point.y >= 0 && point.y < m_height) {
 					// If mouse was not previously in window, create enter event
@@ -249,6 +256,9 @@ namespace Venture {
 				break;
 			}
 			case WM_LBUTTONDOWN: {
+				if (!m_mouseConfined) {
+					ConfineCursor();
+				}
 				const POINTS point = MAKEPOINTS(lParam);
 				Input::LeftMousePressed(point.x, point.y);
 				break;
@@ -288,7 +298,11 @@ namespace Venture {
 			}
 			case WM_INPUT:
 			{
-				Log::DebugPrintF(0, Log::Input, "WM_INPUT Event\n");
+				// Only process raw input if mouse is confined (FPS mode)
+				if (!m_mouseConfined) {
+					break;
+				}
+
 				UINT dwSize = sizeof(RAWINPUT);
 				static BYTE lpb[sizeof(RAWINPUT)];
 
@@ -305,7 +319,6 @@ namespace Venture {
 						// Don't make events for clicks
 						if (xPosRelative != 0 || yPosRelative != 0) {
 							Input::MouseDelta(xPosRelative, yPosRelative);
-							Log::DebugPrintF(0, Log::Input, "X delta:%i, Y delta:%i\n", xPosRelative, yPosRelative);
 						}
 					}
 				}
@@ -359,23 +372,37 @@ namespace Venture {
 
 	void Window::GainFocus() {
 		m_windowHasFocus = true;
-		/*
-		if (m_mouseCentered == false) {
-			// TODO: Temp method of locking mouse to center
-			m_mouseCentered = true;
-			//ShowCursor(FALSE);
-		}
-		*/
 	}
 
 	void Window::LoseFocus() {
 		m_windowHasFocus = false;
-		/*
-		if (m_mouseCentered == true) {
-			// TODO: Temp method of unlocking mouse
-			m_mouseCentered = false;
-			//ShowCursor(TRUE);
-		}
-		*/
+		FreeCursor();
+	}
+
+	void Window::ConfineCursor() {
+		m_mouseConfined = true;
+		ResizeClipRect();
+		ClipCursor(&m_windowRect);
+		ShowCursor(FALSE);
+	}
+
+	void Window::FreeCursor() {
+		m_mouseConfined = false;
+		ClipCursor(nullptr);
+		ShowCursor(TRUE);
+	}
+
+	void Window::ResizeClipRect() {
+		// Rect in client coordinates starting at zero
+		GetClientRect(m_window, &m_windowRect);
+		// Convert to screen coordinates
+		POINT topLeft{ m_windowRect.left, m_windowRect.top };
+		POINT bottomRight{ m_windowRect.right, m_windowRect.bottom };
+		ClientToScreen(m_window, &topLeft);
+		ClientToScreen(m_window, &bottomRight);
+		m_windowRect.left = topLeft.x;
+		m_windowRect.top = topLeft.y;
+		m_windowRect.right = bottomRight.x;
+		m_windowRect.bottom = bottomRight.y;
 	}
 }

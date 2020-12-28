@@ -69,6 +69,13 @@ namespace Venture {
 		std::pair<int, int> pos = mouseDeltaEvent->GetPosition();
 		m_camera.m_yaw += -pos.first * m_camera.m_lookSpeed * static_cast<float>(Time::DeltaTime());
 		m_camera.m_pitch += -pos.second * m_camera.m_lookSpeed * static_cast<float>(Time::DeltaTime());
+
+		if (m_camera.m_pitch > 89) {
+			m_camera.m_pitch = 89;
+		}
+		if (m_camera.m_pitch < -89) {
+			m_camera.m_pitch = -89;
+		}
 	}
 
 }

@@ -29,6 +29,7 @@ namespace Venture {
 	bool Keyboard::buttonStates[DownArrow + 1] = { false };
 
 	Keyboard::KeyCode Keyboard::ConvertWindowsKeyCode(int keyCode) {
+		// TODO: Refactor to switch statement
 		if (keyCode == 0x01) {
 			return LeftMouse;
 		}
@@ -55,6 +56,9 @@ namespace Venture {
 		}
 		else if (keyCode == 0x12) {
 			return Alt;
+		}
+		else if (keyCode == 0x1B) {
+			return Escape;
 		}
 		else if (keyCode == 0x20) {
 			return Space;

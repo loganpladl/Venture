@@ -204,8 +204,8 @@ namespace Venture {
 		DirectX::XMMATRIX view = DirectX::XMLoadFloat4x4(&m_viewTransform);
 
 		DirectX::XMMATRIX mat = DirectX::XMMatrixTranspose(
-			DirectX::XMMatrixRotationZ(angle) *
-			DirectX::XMMatrixRotationX(angle) *
+			//DirectX::XMMatrixRotationZ(angle) *
+			//DirectX::XMMatrixRotationX(angle) *
 			DirectX::XMMatrixTranslation(0.0f, 0.0f, 4.0f) *
 			view *
 			DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f/4.0f, 0.5f, 25.0f)

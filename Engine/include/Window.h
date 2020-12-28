@@ -19,13 +19,17 @@ namespace Venture {
 		bool ProcessMessages();
 		void GainFocus();
 		void LoseFocus();
+		void ConfineCursor();
+		void FreeCursor();
+		void ResizeClipRect();
 	private:
 		HINSTANCE m_instance;
 		LPCWSTR m_windowClassName;
 		HWND m_window;
+		RECT m_windowRect;
 		int m_width;
 		int m_height;
 		bool m_windowHasFocus;
-		bool m_mouseCentered;
+		bool m_mouseConfined;
 	};
 }
