@@ -6,7 +6,7 @@ namespace Venture {
 	// Forward declaration
 	class GameObject;
 
-	enum ComponentType {
+	enum class ComponentType {
 		Transform,
 		MeshInstance,
 		Camera

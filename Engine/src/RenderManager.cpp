@@ -20,7 +20,7 @@ namespace Venture {
 	void RenderManager::Render() {
 		m_direct3DManager.UpdateViewTransform(m_viewTransform);
 		m_direct3DManager.ClearBuffer(0.0f, 0.0f, 0.0f);
-		m_direct3DManager.DrawMesh(DefaultMeshes::GetNewCube());
+		m_direct3DManager.DrawMesh(DefaultMeshes::GetCube());
 		m_direct3DManager.Present();
 	}
 }

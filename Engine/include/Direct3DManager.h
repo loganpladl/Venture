@@ -14,7 +14,7 @@ namespace Venture {
 		int Init(HWND window);
 		void Present();
 		void ClearBuffer(float red, float green, float blue);
-		void DrawMesh(Mesh mesh);
+		void DrawMesh(Mesh* mesh);
 		void UpdateViewTransform(DirectX::XMFLOAT4X4 newTransform);
 	private:
 		ID3D11Device* m_device = nullptr;

@@ -1,4 +1,5 @@
 #include "../include/GameObject.h"
+#include "../include/Transform.h"
 
 namespace Venture {
 	GameObject::GameObject() : 
@@ -51,6 +52,18 @@ namespace Venture {
 		GameObject* object = gameObjectTable[m_handleIndex];
 		if (object != nullptr && object->m_uniqueID == m_uniqueID) {
 			return object;
+		}
+		return nullptr;
+	}
+
+	Transform* GameObject::GetTransform() {
+		for (Component* c : m_components) {
+			if (c != nullptr) {
+				if (c->GetType() == ComponentType::Transform) {
+					// Avoid dynamic cast since we know it's a Transform component
+					return static_cast<Transform*>(c);
+				}
+			}
 		}
 		return nullptr;
 	}

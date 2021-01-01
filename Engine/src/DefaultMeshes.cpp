@@ -28,7 +28,9 @@ namespace Venture {
 			4, 7, 5,	// bottom face
 	};
 
-	Mesh DefaultMeshes::GetNewCube() {
-		return Mesh(Cube::vertices, Cube::indices);
+	Mesh* DefaultMeshes::s_cube = new Mesh(Cube::vertices, Cube::indices);
+
+	Mesh* DefaultMeshes::GetCube() {
+		return s_cube;
 	}
 }

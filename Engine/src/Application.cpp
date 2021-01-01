@@ -86,9 +86,6 @@ namespace Venture {
 		// Handle Venture events
 		EventSystem::DispatchEvents();
 
-		GameObject* cube = new GameObject();
-		GameObjectHandle handle(*cube);
-
 		// Update all GameObjects
 		GameObject** gameObjects = GameObject::GetAllGameObjects();
 		int maxGameObjects = GameObject::GetMaxGameObjects();

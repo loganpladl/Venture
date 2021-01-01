@@ -9,7 +9,8 @@ namespace Venture {
 			static std::vector<Vertex> vertices;
 			static std::vector<int> indices;
 		};
+		static Mesh* s_cube;
 	public:
-		static Mesh GetNewCube();
+		static Mesh* GetCube();
 	};
 }

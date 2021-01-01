@@ -5,7 +5,7 @@
 namespace Venture {
 	class MeshInstance : public Component {
 	public:
-		MeshInstance(Mesh* mesh) : Component(ComponentType::MeshInstance), m_mesh(mesh) {
+		MeshInstance(GameObject* parent, Mesh* mesh) : Component(ComponentType::MeshInstance, parent), m_mesh(mesh) {
 
 		}
 	private:

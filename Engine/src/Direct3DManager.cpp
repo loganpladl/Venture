@@ -154,38 +154,11 @@ namespace Venture {
 		m_context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0u);
 	}
 
-	void Direct3DManager::DrawMesh(Mesh mesh) {
-		float vertexPos = 1;
-		std::vector<Vertex> vertices = {
-			{ vertexPos, vertexPos, vertexPos,  	0, 0, 0},
-			{ -vertexPos, vertexPos, vertexPos,		255, 0, 0 },
-			{ vertexPos, -vertexPos, vertexPos,		0, 255, 0},
-			{ vertexPos, vertexPos, -vertexPos,		255, 255, 0},
-			{ -vertexPos, -vertexPos, vertexPos,	0, 0, 255},
-			{ vertexPos, -vertexPos, -vertexPos,	255, 0, 255},
-			{ -vertexPos, vertexPos, -vertexPos,	0, 255, 255},
-			{ -vertexPos, -vertexPos, -vertexPos,	255, 255, 255}
-		};
-
-		std::vector<int> indices = {
-			0, 3, 1,	//top face
-			3, 6, 1,	//top face
-			3, 5, 6,	//front face
-			5, 7, 6,	//front face
-			0, 2, 3,	// right face
-			2, 5, 3,	// right face
-			1, 6, 4,	// left face
-			6, 7, 4,	// left face
-			0, 1, 2,	// back face
-			1, 4, 2,	// back face
-			2, 4, 5,	// bottom face
-			4, 7, 5,	// bottom face
-		};
-
-		//Mesh mesh(vertices, indices);
-
-		mesh.CreateBuffers(m_device);
-		mesh.BindBuffers(m_context);
+	void Direct3DManager::DrawMesh(Mesh* mesh) {
+		if (!mesh->IsLoaded()) {
+			mesh->CreateBuffers(m_device);
+		}
+		mesh->BindBuffers(m_context);
 
 		// Vertex shader
 		VertexShader vs("VertexShader.cso", m_device, m_context);
@@ -198,14 +171,10 @@ namespace Venture {
 		};
 		ConstantBuffer cb;
 
-		float angle = static_cast<float>(Time::CurrentTime());
-
 		// Load view transform
 		DirectX::XMMATRIX view = DirectX::XMLoadFloat4x4(&m_viewTransform);
 
 		DirectX::XMMATRIX mat = DirectX::XMMatrixTranspose(
-			//DirectX::XMMatrixRotationZ(angle) *
-			//DirectX::XMMatrixRotationX(angle) *
 			DirectX::XMMatrixTranslation(0.0f, 0.0f, 4.0f) *
 			view *
 			DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f/4.0f, 0.5f, 25.0f)
@@ -263,7 +232,7 @@ namespace Venture {
 
 		m_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		int numIndices = mesh.NumIndices();
+		int numIndices = mesh->NumIndices();
 		m_context->DrawIndexed(numIndices, 0u, 0u);
 
 		pInputLayout->Release();

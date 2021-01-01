@@ -5,6 +5,9 @@
 #include "EventHandler.h"
 #include "Event.h"
 
+// TODO: Probably should use transform of parent object instead of separate 
+// member variable positions/orientation here.
+
 namespace Venture {
 	class FPSCamera : public Camera {
 	public:

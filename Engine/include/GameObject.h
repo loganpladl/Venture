@@ -7,6 +7,8 @@ namespace Venture {
 	// Forward declarations
 	class GameObject;
 	class GameObjectHandle;
+	class Transform;
+
 	static int GetUniqueID();
 	static int GetNewHandleIndex(GameObject* gameObject);
 	static void FreeHandleIndex(int index);
@@ -39,6 +41,8 @@ namespace Venture {
 		static GameObjectHandle Create();
 
 		void Destroy();
+
+		Transform* GetTransform();
 	};
 
 	static int nextUniqueID = 0;
