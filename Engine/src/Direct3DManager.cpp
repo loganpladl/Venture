@@ -177,8 +177,10 @@ namespace Venture {
 		DirectX::XMMATRIX mat = DirectX::XMMatrixTranspose(
 			DirectX::XMMatrixTranslation(0.0f, 0.0f, 4.0f) *
 			view *
-			DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f/4.0f, 0.5f, 25.0f)
+			// TODO: Is there a slight distortion at the edges of the screen?
+			DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(80), 4.0f / 3.0f, 0.5f, 25.0f)
 		);
+
 		DirectX::XMStoreFloat4x4(&cb.transform, mat);
 
 		ID3D11Buffer* pConstBuffer;
