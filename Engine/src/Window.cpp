@@ -3,15 +3,9 @@
 #include <hidusage.h>
 
 namespace Venture {
-	Window::Window() {
-		m_instance = GetModuleHandle(NULL);
-		m_windowClassName = L"VentureWindowClass";
-		m_window = NULL;
-		// Default width and height
-		m_width = 640;
-		m_height = 480;
-		m_windowHasFocus = false;
-		m_mouseConfined = false;
+	Window::Window() : 
+		m_instance(GetModuleHandle(NULL)), m_windowClassName(L"VentureWindowClass"),
+		m_window(NULL), m_width(640), m_height(480), m_windowHasFocus(false), m_mouseConfined(false), m_windowRect() {
 	}
 
 	int Window::Init() {
@@ -22,7 +16,7 @@ namespace Venture {
 
 		// Get default icon
 		if (icon == NULL) {
-			icon = ExtractIcon(m_instance, exePath, 0);
+			icon = ExtractIcon(NULL, exePath, 0);
 		}
 
 		// Register the window class
@@ -80,7 +74,7 @@ namespace Venture {
 
 		//GetWindowRect(m_window, &m_windowRect);
 
-		// Register moues as raw input device to be able to use WM_INPUT
+		// Register mouse as raw input device to be able to use WM_INPUT
 		// TODO: Find cleaner spot for this
 		RAWINPUTDEVICE Rid[1];
 		Rid[0].usUsagePage = HID_USAGE_PAGE_GENERIC;
@@ -198,16 +192,16 @@ namespace Venture {
 				Keyboard::KeyCode keyCode = Keyboard::ConvertWindowsKeyCode((int)wParam);
 				// Only create events for relevant keycodes and eliminate repeats
 				int prevState = lParam & 0x40000000;
-				if (keyCode != Keyboard::Unassigned && prevState == 0) {
+				if (keyCode != Keyboard::KeyCode::Unassigned && prevState == 0) {
 					Input::KeyPressed(keyCode);
 				}
 				// NOTE: Maybe do this through event system instead of here
 				// Free cursor if user presses escape in first person mode
 				// Close window if user presses escape in normal use
-				if (keyCode == Keyboard::Escape && m_mouseConfined) {
+				if (keyCode == Keyboard::KeyCode::Escape && m_mouseConfined) {
 					FreeCursor();
 				}
-				else if (keyCode == Keyboard::Escape && !m_mouseConfined) {
+				else if (keyCode == Keyboard::KeyCode::Escape && !m_mouseConfined) {
 					Destroy();
 				}
 				break;
@@ -216,7 +210,7 @@ namespace Venture {
 			case WM_SYSKEYUP: {
 				Keyboard::KeyCode keyCode = Keyboard::ConvertWindowsKeyCode((int)wParam);
 				// Only create events for relevant keycodes
-				if (keyCode != Keyboard::Unassigned) {
+				if (keyCode != Keyboard::KeyCode::Unassigned) {
 					Input::KeyReleased(keyCode);
 				}
 				break;

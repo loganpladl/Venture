@@ -7,14 +7,14 @@ namespace Venture {
 	void Keyboard::KeyPressedEventHandler::Handle(Event* event) {
 		KeyPressedEvent* keyPressedEvent = dynamic_cast<KeyPressedEvent*>(event);
 		KeyCode keyCode = keyPressedEvent->m_keyCode;
-		buttonStates[keyCode] = true;
+		buttonStates[static_cast<int>(keyCode)] = true;
 	}
 
 	// Deactivate key
 	void Keyboard::KeyReleasedEventHandler::Handle(Event* event) {
 		KeyReleasedEvent* keyReleasedEvent = dynamic_cast<KeyReleasedEvent*>(event);
 		KeyCode keyCode = keyReleasedEvent->m_keyCode;
-		buttonStates[keyCode] = false;
+		buttonStates[static_cast<int>(keyCode)] = false;
 	}
 
 	void Keyboard::Init() {
@@ -26,65 +26,65 @@ namespace Venture {
 	Keyboard::KeyPressedEventHandler Keyboard::keyPressedHandler;
 	Keyboard::KeyReleasedEventHandler Keyboard::keyReleasedHandler;
 	// Initialize all to false
-	bool Keyboard::buttonStates[DownArrow + 1] = { false };
+	bool Keyboard::buttonStates[static_cast<int>(KeyCode::DownArrow) + 1] = { false };
 
 	Keyboard::KeyCode Keyboard::ConvertWindowsKeyCode(int keyCode) {
 		// TODO: Refactor to switch statement
 		if (keyCode == 0x01) {
-			return LeftMouse;
+			return KeyCode::LeftMouse;
 		}
 		else if (keyCode == 0x02) {
-			return RightMouse;
+			return KeyCode::RightMouse;
 		}
 		else if (keyCode == 0x04) {
-			return MiddleMouse;
+			return KeyCode::MiddleMouse;
 		}
 		else if (keyCode == 0x08) {
-			return Backspace;
+			return KeyCode::Backspace;
 		}
 		else if (keyCode == 0x09) {
-			return Tab;
+			return KeyCode::Tab;
 		}
 		else if (keyCode == 0x0D) {
-			return Enter;
+			return KeyCode::Enter;
 		}
 		else if (keyCode == 0x10) {
-			return Shift;
+			return KeyCode::Shift;
 		}
 		else if (keyCode == 0x11) {
-			return Ctrl;
+			return KeyCode::Ctrl;
 		}
 		else if (keyCode == 0x12) {
-			return Alt;
+			return KeyCode::Alt;
 		}
 		else if (keyCode == 0x1B) {
-			return Escape;
+			return KeyCode::Escape;
 		}
 		else if (keyCode == 0x20) {
-			return Space;
+			return KeyCode::Space;
 		}
 		else if (keyCode == 0x25) {
-			return LeftArrow;
+			return KeyCode::LeftArrow;
 		}
 		else if (keyCode == 0x26) {
-			return UpArrow;
+			return KeyCode::UpArrow;
 		}
 		else if (keyCode == 0x27) {
-			return RightArrow;
+			return KeyCode::RightArrow;
 		}
 		else if (keyCode == 0x28) {
-			return DownArrow;
+			return KeyCode::DownArrow;
 		}
 		else if (keyCode >= 0x30 && keyCode <= 0x39) {
 			// Convert numeric keycodes
-			return (KeyCode)(Zero + keyCode - 0x30);
+			return (KeyCode)(static_cast<int>(KeyCode::Zero) + keyCode - 0x30);
 		}
 		else if (keyCode >= 0x41 && keyCode <= 0x5A) {
 			// Convert alphabetical keycodes
-			return (KeyCode)(A + keyCode - 0x41);
+			return (KeyCode)(static_cast<int>(KeyCode::A) + keyCode - 0x41);
 		}
 		else {
-			return Unassigned;
+			return KeyCode::Unassigned;
 		}
 	}
 

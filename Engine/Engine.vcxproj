@@ -162,7 +162,6 @@
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\Keyboard.cpp" />
     <ClCompile Include="src\Log.cpp" />
-    <ClCompile Include="src\Math.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Mouse.cpp" />
     <ClCompile Include="src\PixelShader.cpp" />
@@ -194,7 +193,6 @@
     <ClInclude Include="include\KeyEvent.h" />
     <ClInclude Include="include\Log.h" />
     <ClInclude Include="include\Material.h" />
-    <ClInclude Include="include\Math.h" />
     <ClInclude Include="include\Mesh.h" />
     <ClInclude Include="include\MeshInstance.h" />
     <ClInclude Include="include\Mouse.h" />

@@ -12,7 +12,7 @@
 #include "../include/Time.h"
 
 namespace Venture {
-	Direct3DManager::Direct3DManager() {
+	Direct3DManager::Direct3DManager() : m_viewTransform() {
 		m_featureLevel = D3D_FEATURE_LEVEL_11_1; //default
 		m_window = nullptr;
 	}

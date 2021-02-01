@@ -19,62 +19,62 @@ namespace Venture {
 
 	class MouseMoveEvent : public MouseEvent {
 	public:
-		MouseMoveEvent(int x, int y) : MouseEvent(MouseMove, x, y) {}
+		MouseMoveEvent(int x, int y) : MouseEvent(EventType::MouseMove, x, y) {}
 	};
 	
 	class LeftMousePressedEvent : public MouseEvent {
 	public:
-		LeftMousePressedEvent(int x, int y) : MouseEvent(LeftMousePressed, x, y) {}
+		LeftMousePressedEvent(int x, int y) : MouseEvent(EventType::LeftMousePressed, x, y) {}
 	};
 
 	class LeftMouseReleasedEvent : public MouseEvent {
 	public:
-		LeftMouseReleasedEvent(int x, int y) : MouseEvent(LeftMouseReleased, x, y) {}
+		LeftMouseReleasedEvent(int x, int y) : MouseEvent(EventType::LeftMouseReleased, x, y) {}
 	};
 
 	class RightMousePressedEvent : public MouseEvent {
 	public:
-		RightMousePressedEvent(int x, int y) : MouseEvent(RightMousePressed, x, y) {}
+		RightMousePressedEvent(int x, int y) : MouseEvent(EventType::RightMousePressed, x, y) {}
 	};
 
 	class RightMouseReleasedEvent : public MouseEvent {
 	public:
-		RightMouseReleasedEvent(int x, int y) : MouseEvent(RightMouseReleased, x, y) {}
+		RightMouseReleasedEvent(int x, int y) : MouseEvent(EventType::RightMouseReleased, x, y) {}
 	};
 
 	class MiddleMousePressedEvent : public MouseEvent {
 	public:
-		MiddleMousePressedEvent(int x, int y) : MouseEvent(MiddleMousePressed, x, y) {}
+		MiddleMousePressedEvent(int x, int y) : MouseEvent(EventType::MiddleMousePressed, x, y) {}
 	};
 
 	class MiddleMouseReleasedEvent : public MouseEvent {
 	public:
-		MiddleMouseReleasedEvent(int x, int y) : MouseEvent(MiddleMouseReleased, x, y) {}
+		MiddleMouseReleasedEvent(int x, int y) : MouseEvent(EventType::MiddleMouseReleased, x, y) {}
 	};
 
 	class MouseScrollUpEvent : public MouseEvent {
 	public:
-		MouseScrollUpEvent(int x, int y) : MouseEvent(MouseScrollUp, x, y) {}
+		MouseScrollUpEvent(int x, int y) : MouseEvent(EventType::MouseScrollUp, x, y) {}
 	};
 
 	class MouseScrollDownEvent : public MouseEvent {
 	public:
-		MouseScrollDownEvent(int x, int y) : MouseEvent(MouseScrollDown, x, y) {}
+		MouseScrollDownEvent(int x, int y) : MouseEvent(EventType::MouseScrollDown, x, y) {}
 	};
 
 	class MouseEnterEvent : public MouseEvent {
 	public:
-		MouseEnterEvent() : MouseEvent(MouseEnter) {}
+		MouseEnterEvent() : MouseEvent(EventType::MouseEnter) {}
 	};
 
 	class MouseLeaveEvent : public MouseEvent {
 	public:
-		MouseLeaveEvent() : MouseEvent(MouseLeave) {}
+		MouseLeaveEvent() : MouseEvent(EventType::MouseLeave) {}
 	};
 
 	// Raw input to be used with FPS camera
 	class MouseDeltaEvent : public MouseEvent {
 	public:
-		MouseDeltaEvent(int x, int y) : MouseEvent(MouseDelta, x, y) {}
+		MouseDeltaEvent(int x, int y) : MouseEvent(EventType::MouseDelta, x, y) {}
 	};
 }

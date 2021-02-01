@@ -11,7 +11,7 @@ using namespace DirectX;
 namespace Venture {
 	FPSCamera::FPSCamera(GameObject* parent) : Camera(parent),
 		m_position(0,0,0), m_direction(0,0,1), m_up(0,1,0), m_pitch(0), m_yaw(90), 
-		m_moveSpeed(5), m_lookSpeed(3),
+		m_moveSpeed(5), m_lookSpeed(5),
 		m_mouseDeltaEventHandler(*this){
 		EventSystem::RegisterHandler(&m_mouseDeltaEventHandler, EventType::MouseDelta);
 	}
@@ -44,9 +44,9 @@ namespace Venture {
 	void FPSCamera::UpdateDirection() {
 		float yawRadians = DirectX::XMConvertToRadians(m_yaw);
 		float pitchRadians = DirectX::XMConvertToRadians(m_pitch);
-		m_direction.x = cos(yawRadians) * cos(pitchRadians);
-		m_direction.y = sin(pitchRadians);
-		m_direction.z = sin(yawRadians) * cos(pitchRadians);
+		m_direction.x = static_cast<float>(cos(yawRadians) * cos(pitchRadians));
+		m_direction.y = static_cast<float>(sin(pitchRadians));
+		m_direction.z = static_cast<float>(sin(yawRadians) * cos(pitchRadians));
 
 		DirectX::XMVECTOR vec = DirectX::XMLoadFloat3(&m_direction);
 		vec = DirectX::XMVector3Normalize(vec);

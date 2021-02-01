@@ -28,67 +28,67 @@ namespace Venture {
 		std::pair<int, int> position = mouseMoveEvent->GetPosition();
 		m_x = position.first;
 		m_y = position.second;
-		Log::DebugPrintF(1, Log::Input, "Mouse Moved - x = %i, y = %i \n", m_x, m_y);
+		Log::DebugPrintF(1, Log::Channel::Input, "Mouse Moved - x = %i, y = %i \n", m_x, m_y);
 	}
 
 	void Mouse::LeftMousePressedEventHandler::Handle(Event* event) {
 		LeftMousePressedEvent* leftMousePressedEvent = dynamic_cast<LeftMousePressedEvent*>(event);
 		std::pair<int, int> position = leftMousePressedEvent->GetPosition();
-		Log::DebugPrintF(1, Log::Input, "Left Mouse Clicked - x = %i, y = %i \n", m_x, m_y);
+		Log::DebugPrintF(1, Log::Channel::Input, "Left Mouse Clicked - x = %i, y = %i \n", m_x, m_y);
 	}
 
 	void Mouse::LeftMouseReleasedEventHandler::Handle(Event* event) {
 		LeftMouseReleasedEvent* leftMouseReleasedEvent = dynamic_cast<LeftMouseReleasedEvent*>(event);
 		std::pair<int, int> position = leftMouseReleasedEvent->GetPosition();
-		Log::DebugPrintF(1, Log::Input, "Left Mouse Released - x = %i, y = %i \n", m_x, m_y);
+		Log::DebugPrintF(1, Log::Channel::Input, "Left Mouse Released - x = %i, y = %i \n", m_x, m_y);
 	}
 
 	void Mouse::RightMousePressedEventHandler::Handle(Event* event) {
 		RightMousePressedEvent* rightMousePressedEvent = dynamic_cast<RightMousePressedEvent*>(event);
 		std::pair<int, int> position = rightMousePressedEvent->GetPosition();
-		Log::DebugPrintF(1, Log::Input, "Right Mouse Clicked - x = %i, y = %i \n", m_x, m_y);
+		Log::DebugPrintF(1, Log::Channel::Input, "Right Mouse Clicked - x = %i, y = %i \n", m_x, m_y);
 	}
 
 	void Mouse::RightMouseReleasedEventHandler::Handle(Event* event) {
 		RightMouseReleasedEvent* rightMouseReleasedEvent = dynamic_cast<RightMouseReleasedEvent*>(event);
 		std::pair<int, int> position = rightMouseReleasedEvent->GetPosition();
-		Log::DebugPrintF(1, Log::Input, "Right Mouse Released - x = %i, y = %i \n", m_x, m_y);
+		Log::DebugPrintF(1, Log::Channel::Input, "Right Mouse Released - x = %i, y = %i \n", m_x, m_y);
 	}
 
 	void Mouse::MiddleMousePressedEventHandler::Handle(Event* event) {
 		MiddleMousePressedEvent* middleMousePressedEvent = dynamic_cast<MiddleMousePressedEvent*>(event);
 		std::pair<int, int> position = middleMousePressedEvent->GetPosition();
-		Log::DebugPrintF(1, Log::Input, "Middle Mouse Clicked - x = %i, y = %i \n", m_x, m_y);
+		Log::DebugPrintF(1, Log::Channel::Input, "Middle Mouse Clicked - x = %i, y = %i \n", m_x, m_y);
 	}
 
 	void Mouse::MiddleMouseReleasedEventHandler::Handle(Event* event) {
 		MiddleMouseReleasedEvent* middleMouseReleasedEvent = dynamic_cast<MiddleMouseReleasedEvent*>(event);
 		std::pair<int, int> position = middleMouseReleasedEvent->GetPosition();
-		Log::DebugPrintF(1, Log::Input, "Middle Mouse Released - x = %i, y = %i \n", m_x, m_y);
+		Log::DebugPrintF(1, Log::Channel::Input, "Middle Mouse Released - x = %i, y = %i \n", m_x, m_y);
 	}
 
 	void Mouse::MouseScrollUpEventHandler::Handle(Event* event) {
 		MouseScrollUpEvent* mouseScrollUpEvent = dynamic_cast<MouseScrollUpEvent*>(event);
 		std::pair<int, int> position = mouseScrollUpEvent->GetPosition();
-		Log::DebugPrintF(1, Log::Input, "Mouse Scroll Up - x = %i, y = %i \n", m_x, m_y);
+		Log::DebugPrintF(1, Log::Channel::Input, "Mouse Scroll Up - x = %i, y = %i \n", m_x, m_y);
 	}
 
 	void Mouse::MouseScrollDownEventHandler::Handle(Event* event) {
 		MouseScrollDownEvent* mouseScrollDownEvent = dynamic_cast<MouseScrollDownEvent*>(event);
 		std::pair<int, int> position = mouseScrollDownEvent->GetPosition();
-		Log::DebugPrintF(1, Log::Input, "Mouse Scroll Down - x = %i, y = %i \n", m_x, m_y);
+		Log::DebugPrintF(1, Log::Channel::Input, "Mouse Scroll Down - x = %i, y = %i \n", m_x, m_y);
 	}
 
 	void Mouse::MouseEnterEventHandler::Handle(Event* event) {
 		MouseEnterEvent* mouseEnterEvent = dynamic_cast<MouseEnterEvent*>(event);
 		MouseEnterWindow();
-		Log::DebugPrintF(1, Log::Input, "Mouse Enter \n");
+		Log::DebugPrintF(1, Log::Channel::Input, "Mouse Enter \n");
 	}
 
 	void Mouse::MouseLeaveEventHandler::Handle(Event* event) {
 		MouseLeaveEvent* mouseLeaveEvent = dynamic_cast<MouseLeaveEvent*>(event);
 		MouseLeaveWindow();
-		Log::DebugPrintF(1, Log::Input, "Mouse Leave \n");
+		Log::DebugPrintF(1, Log::Channel::Input, "Mouse Leave \n");
 	}
 
 	void Mouse::Init() {

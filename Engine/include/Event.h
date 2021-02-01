@@ -1,7 +1,7 @@
 #pragma once
 
 namespace Venture {
-	enum EventType {
+	enum class EventType {
 		KeyPressed,
 		KeyReleased,
 		MouseMove,

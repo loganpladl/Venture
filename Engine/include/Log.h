@@ -10,7 +10,7 @@
 
 namespace Venture {
 	namespace Log {
-		enum Channel {
+		enum class Channel {
 			General,
 			Gameplay,
 			Animation,
@@ -39,13 +39,13 @@ namespace Venture {
 		int closeLogFiles();
 
 		inline const char* channelToString(Channel channel) {
-			return CHANNEL_NAMES[channel];
+			return CHANNEL_NAMES[static_cast<int>(channel)];
 		}
 
 		extern unsigned int g_activeChannels;
 
 		inline bool isChannelActive(Channel channel) {
-			return g_activeChannels & (1 << channel);
+			return g_activeChannels & (1 << static_cast<int>(channel));
 		}
 
 		extern int g_verbosity;

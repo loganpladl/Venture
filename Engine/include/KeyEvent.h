@@ -8,7 +8,7 @@ namespace Venture {
 	private :
 
 	public:
-		KeyPressedEvent(Keyboard::KeyCode keyCode) : Event{ KeyPressed }, m_keyCode(keyCode) {}
+		KeyPressedEvent(Keyboard::KeyCode keyCode) : Event{ EventType::KeyPressed }, m_keyCode(keyCode) {}
 		Keyboard::KeyCode m_keyCode;
 	};
 
@@ -16,7 +16,7 @@ namespace Venture {
 	private:
 
 	public:
-		KeyReleasedEvent(Keyboard::KeyCode keyCode) : Event{ KeyReleased }, m_keyCode(keyCode) {}
+		KeyReleasedEvent(Keyboard::KeyCode keyCode) : Event{ EventType::KeyReleased }, m_keyCode(keyCode) {}
 		Keyboard::KeyCode m_keyCode;
 	};
 }

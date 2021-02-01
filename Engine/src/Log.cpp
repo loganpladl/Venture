@@ -30,10 +30,10 @@ namespace Venture {
 		int logFileHandles[NUM_CHANNELS];
 
 		void EnableChannel(Channel channel) {
-			g_activeChannels |= 1 << channel;
+			g_activeChannels |= 1 << static_cast<int>(channel);
 		}
 		void DisableChannel(Channel channel) {
-			g_activeChannels &= ~(1 << channel);
+			g_activeChannels &= ~(1 << static_cast<int>(channel));
 		}
 
 		const char* getLogFilePath(char* target, const char* name) {
@@ -95,8 +95,8 @@ namespace Venture {
 			memcpy(newBuffer.GetBuffer(), tempBuffer.GetBuffer(), size);
 
 			// Print to file depending on channel
-			if (logFileHandles[channel] >= 0) {
-				File::AsyncWriteRequest* request = FileSystem::AsyncWriteFile(logFileHandles[channel], newBuffer, size);
+			if (logFileHandles[static_cast<int>(channel)] >= 0) {
+				File::AsyncWriteRequest* request = FileSystem::AsyncWriteFile(logFileHandles[static_cast<int>(channel)], newBuffer, size);
 			}
 
 			return 0;

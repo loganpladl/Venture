@@ -14,7 +14,7 @@ namespace Venture {
 	public:
 		static KeyPressedEventHandler keyPressedHandler;
 		static KeyReleasedEventHandler keyReleasedHandler;
-		enum KeyCode {
+		enum class KeyCode {
 			Unassigned, LeftMouse, RightMouse, MiddleMouse,
 			A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
 			Zero, One, Two, Three, Four, Five, Six, Seven, Eight, Nine,
@@ -28,7 +28,7 @@ namespace Venture {
 		static KeyCode ConvertWindowsKeyCode(int keyCode);
 
 		inline static bool IsButtonPressed(KeyCode keyCode) {
-			return buttonStates[keyCode];
+			return buttonStates[static_cast<int>(keyCode)];
 		}
 		static void Init();
 	};

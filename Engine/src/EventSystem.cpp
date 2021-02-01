@@ -14,7 +14,7 @@ namespace Venture {
 
 	void EventSystem::Dispatch(Event* event) {
 		EventType type = event->getType();
-		std::list<EventHandler*> handlers = s_eventHandlers[type];
+		std::list<EventHandler*> handlers = s_eventHandlers[static_cast<int>(type)];
 		for (auto& handler : handlers) {
 			handler->Handle(event);
 		}
@@ -22,7 +22,7 @@ namespace Venture {
 	}
 
 	void EventSystem::RegisterHandler(EventHandler* handler, EventType type) {
-		s_eventHandlers[type].push_back(handler);
+		s_eventHandlers[static_cast<int>(type)].push_back(handler);
 	}
 
 	void EventSystem::Enqueue(Event* event) {
