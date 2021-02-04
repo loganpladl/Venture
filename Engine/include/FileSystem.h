@@ -9,6 +9,7 @@ namespace Venture {
 	class FileSystem {
 	private:
 		static std::atomic<bool> s_processing;
+		// Use "Construct Members on First Use" idiom to avoid static initialization order disaster
 		static std::mutex s_queueMutex;
 		static CircularQueue<File::AsyncRequest*> s_queue;
 	public:

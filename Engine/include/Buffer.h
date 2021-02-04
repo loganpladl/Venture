@@ -17,5 +17,8 @@ namespace Venture {
 		void Create(size_t bytes);
 		char* GetBuffer() const;
 		size_t GetBytes() const;
+		inline bool IsNull() const {
+			return m_buffer == nullptr;
+		}
 	};
 }

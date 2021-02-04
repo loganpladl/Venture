@@ -11,6 +11,7 @@ namespace Venture {
 		};
 		static Mesh* s_cube;
 	public:
+		// Returns the same static mesh for each call
 		static Mesh* GetCube();
 	};
 }

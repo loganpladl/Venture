@@ -20,6 +20,8 @@ namespace Venture {
 		// Update direction changes accrued by event handler
 		UpdateDirection();
 
+		
+
 		XMVECTOR dir = XMLoadFloat3(&m_direction);
 		XMVECTOR up = XMLoadFloat3(&m_up);
 		XMVECTOR pos = XMLoadFloat3(&m_position);

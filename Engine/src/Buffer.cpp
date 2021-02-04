@@ -8,7 +8,7 @@ namespace Venture {
 		m_bytes = bytes;
 	}
 	Buffer::Buffer() {
-		m_buffer = NULL;
+		m_buffer = nullptr;
 		m_bytes = 0;
 	}
 	Buffer::~Buffer() {
@@ -29,7 +29,7 @@ namespace Venture {
 	}
 
 	void Buffer::Create(size_t bytes) {
-		if (m_buffer != NULL) {
+		if (m_buffer != nullptr) {
 			delete m_buffer;
 		}
 		m_buffer = new char[bytes];

@@ -6,12 +6,12 @@
 namespace Venture {
 	class VertexShader : public Shader {
 	public:
-		VertexShader(std::string path, ID3D11Device* device, ID3D11DeviceContext* context);
-		void Bind() override;
+		VertexShader(std::string path);
+		void Create(ID3D11Device* device) override;
+		void Bind(ID3D11DeviceContext* context) override;
+		bool IsLoaded() override;
 		~VertexShader();
 	private:
 		ID3D11VertexShader* m_vertexShader;
-		ID3D11Device* m_device;
-		ID3D11DeviceContext* m_context;
 	};
 }

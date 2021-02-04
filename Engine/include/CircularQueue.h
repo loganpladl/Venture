@@ -21,6 +21,7 @@ namespace Venture {
 			tail = (tail + 1) % MAX_ELEMENTS;
 			return 0;
 		}
+		// TODO: Can currently only be used with pointer types since we return nullptr
 		T Dequeue() {
 			// check if queue is empty
 			if (head == tail) {

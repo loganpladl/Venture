@@ -5,12 +5,12 @@
 namespace Venture {
 	class PixelShader : public Shader {
 	public:
-		PixelShader(std::string path, ID3D11Device* device, ID3D11DeviceContext* context);
-		void Bind() override;
+		PixelShader(std::string path);
+		void Create(ID3D11Device* device) override;
+		void Bind(ID3D11DeviceContext* context) override;
+		bool IsLoaded() override;
 		~PixelShader();
 	private:
 		ID3D11PixelShader* m_pixelShader;
-		ID3D11Device* m_device;
-		ID3D11DeviceContext* m_context;
 	};
 }

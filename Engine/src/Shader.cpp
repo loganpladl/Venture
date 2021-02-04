@@ -2,8 +2,11 @@
 #include "../include/FileSystem.h"
 
 namespace Venture {
-	Shader::Shader(ShaderType type, std::string path) : m_type(type) {
-		File::AsyncOpenReadCloseRequest* request = FileSystem::AsyncOpenReadCloseFile(path.c_str(), "rb");
+	Shader::Shader(ShaderType type, std::string path) : m_type(type), m_path(path) {
+	}
+
+	void Shader::ReadFile() {
+		File::AsyncOpenReadCloseRequest* request = FileSystem::AsyncOpenReadCloseFile(m_path.c_str(), "rb");
 		request->Wait();
 		m_bytecode = request->GetBuffer();
 	}

@@ -154,16 +154,17 @@ namespace Venture {
 		m_context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0u);
 	}
 
-	void Direct3DManager::DrawMesh(Mesh* mesh) {
+	void Direct3DManager::DrawMeshMaterial(Mesh* mesh, Material* material) {
 		if (!mesh->IsLoaded()) {
 			mesh->CreateBuffers(m_device);
 		}
 		mesh->BindBuffers(m_context);
 
-		// Vertex shader
-		VertexShader vs("VertexShader.cso", m_device, m_context);
-
-		vs.Bind();
+		// Create and bind shaders
+		if (!material->ShadersLoaded()) {
+			material->CreateShaders(m_device);
+		}
+		material->BindShaders(m_context);
 
 		// Constant buffer
 		struct ConstantBuffer {
@@ -178,7 +179,7 @@ namespace Venture {
 			DirectX::XMMatrixTranslation(0.0f, 0.0f, 4.0f) *
 			view *
 			// TODO: Is there a slight distortion at the edges of the screen?
-			DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(80), 4.0f / 3.0f, 0.5f, 25.0f)
+			DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(70), 4.0f / 3.0f, 0.5f, 100.0f)
 		);
 
 		DirectX::XMStoreFloat4x4(&cb.transform, mat);
@@ -198,10 +199,6 @@ namespace Venture {
 		// bind constant buffer to vertex shader
 		m_context->VSSetConstantBuffers(0u, 1u, &pConstBuffer);
 
-		// Pixel shader
-		PixelShader ps("PixelShader.cso", m_device, m_context);
-		ps.Bind();
-
 		// Input vertex layout
 		ID3D11InputLayout* pInputLayout;
 		const D3D11_INPUT_ELEMENT_DESC layout[] = {
@@ -211,8 +208,8 @@ namespace Venture {
 		m_device->CreateInputLayout(
 			layout, 
 			sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), 
-			vs.GetBytecode(), 
-			vs.GetBytecodeSize(), 
+			material->GetVertexShader()->GetBytecode(), 
+			material->GetVertexShader()->GetBytecodeSize(),
 			&pInputLayout
 		);
 

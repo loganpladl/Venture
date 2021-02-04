@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -151,7 +151,9 @@
     <ClCompile Include="src\Buffer.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\DefaultGameObjects.cpp" />
+    <ClCompile Include="src\DefaultMaterials.cpp" />
     <ClCompile Include="src\DefaultMeshes.cpp" />
+    <ClCompile Include="src\DefaultShaders.cpp" />
     <ClCompile Include="src\Direct3DManager.cpp" />
     <ClCompile Include="src\EntryPoint.cpp" />
     <ClCompile Include="src\EventSystem.cpp" />
@@ -162,11 +164,14 @@
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\Keyboard.cpp" />
     <ClCompile Include="src\Log.cpp" />
+    <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
+    <ClCompile Include="src\MeshInstance.cpp" />
     <ClCompile Include="src\Mouse.cpp" />
     <ClCompile Include="src\PixelShader.cpp" />
     <ClCompile Include="src\RenderManager.cpp" />
     <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Time.cpp" />
     <ClCompile Include="src\VertexShader.cpp" />
     <ClCompile Include="src\Window.cpp" />
@@ -179,7 +184,9 @@
     <ClInclude Include="include\Component.h" />
     <ClInclude Include="include\Cube.h" />
     <ClInclude Include="include\DefaultGameObjects.h" />
+    <ClInclude Include="include\DefaultMaterials.h" />
     <ClInclude Include="include\DefaultMeshes.h" />
+    <ClInclude Include="include\DefaultShaders.h" />
     <ClInclude Include="include\Direct3DManager.h" />
     <ClInclude Include="include\Event.h" />
     <ClInclude Include="include\EventHandler.h" />
@@ -201,6 +208,7 @@
     <ClInclude Include="include\RenderManager.h" />
     <ClInclude Include="include\Semaphore.h" />
     <ClInclude Include="include\Shader.h" />
+    <ClInclude Include="include\Texture.h" />
     <ClInclude Include="include\Time.h" />
     <ClInclude Include="include\Transform.h" />
     <ClInclude Include="include\Vertex.h" />

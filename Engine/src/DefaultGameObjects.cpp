@@ -4,13 +4,14 @@
 #include "../include/DefaultMeshes.h"
 #include "../include/MeshInstance.h"
 #include "../include/Transform.h"
+#include "../include/DefaultMaterials.h"
 
 namespace Venture {
 	GameObjectHandle DefaultGameObjects::GetNewCube() {
 		GameObjectHandle handle = GameObject::Create();
 		Transform* transform = new Transform(handle.Get());
 		handle.Get()->AddComponent(transform);
-		MeshInstance* cube = new MeshInstance(handle.Get(), DefaultMeshes::GetCube());
+		MeshInstance* cube = new MeshInstance(handle.Get(), DefaultMeshes::GetCube(), DefaultMaterials::UnlitWhite());
 		handle.Get()->AddComponent(cube);
 		return handle;
 	}

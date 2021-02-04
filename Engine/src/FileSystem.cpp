@@ -78,6 +78,7 @@ namespace Venture {
 		s_queueMutex.lock();
 		File::AsyncRequest*  request = s_queue.Dequeue();
 		s_queueMutex.unlock();
+
 		return request;
 	}
 }

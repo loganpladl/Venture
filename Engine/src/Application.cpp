@@ -21,6 +21,7 @@ namespace Venture {
 
 		// Fixed timestep
 		auto TIME_PER_UPDATE = .01666666;
+		//auto TIME_PER_UPDATE = 1;
 
 		const auto SECOND = 1.0;
 		int renderedFrames = 0;
@@ -40,14 +41,30 @@ namespace Venture {
 			accumulatedTime += deltaTime;
 			secondTimer += deltaTime;
 
+			// Currently update and render every loop until the below issues are fixed.
+			Update();
+			Render();
+
 			// Update with fixed timestep
 			while (accumulatedTime >= TIME_PER_UPDATE) {
 				accumulatedTime-= TIME_PER_UPDATE;
-				Update();
+				//Update();
+
+				//Log::DebugPrintF(0, Log::Channel::General, "Test\n");
+
+				// TODO: Camera not moving if rendering within this loop for some reason
+
+
+				// Render every loop
+				//Render();
+				//renderedFrames++;
 			}
+			// TODO: Mesh instances arent submitted every frame so objects flash if we render outside of the above loop
 			// Render every loop
-			Render();
-			renderedFrames++;
+			//Render();
+			//renderedFrames++;
+
+			
 			// Once a second has passed, update frames per second and reset variables
 			if (secondTimer >= SECOND) {
 				framesPerSecond = renderedFrames;
@@ -70,6 +87,8 @@ namespace Venture {
 
 		//Create camera
 		DefaultGameObjects::GetNewFPSCamera();
+		//Create cube
+		DefaultGameObjects::GetNewCube();
 
 		m_renderManager.Init(m_window.GetHandle());
 		return 0;

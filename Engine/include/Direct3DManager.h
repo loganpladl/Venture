@@ -2,6 +2,7 @@
 
 #include <d3d11.h>
 #include "Mesh.h"
+#include "Material.h"
 #include <DirectXMath.h>
 
 namespace Venture {
@@ -14,7 +15,7 @@ namespace Venture {
 		int Init(HWND window);
 		void Present();
 		void ClearBuffer(float red, float green, float blue);
-		void DrawMesh(Mesh* mesh);
+		void DrawMeshMaterial(Mesh* mesh, Material* material);
 		void UpdateViewTransform(DirectX::XMFLOAT4X4 newTransform);
 	private:
 		ID3D11Device* m_device = nullptr;
