@@ -8,6 +8,7 @@
 #include "../include/GameObject.h"
 
 #include "../include/DefaultGameObjects.h"
+#include <Windows.h>
 
 
 namespace Venture {
@@ -19,9 +20,8 @@ namespace Venture {
 	int Application::Run() {
 		Init();
 
-		// Fixed timestep
-		auto TIME_PER_UPDATE = .01666666;
-		//auto TIME_PER_UPDATE = 1;
+		// Fixed timestep, 120fps
+		auto TIME_PER_UPDATE = Time::FixedTimeStep();
 
 		const auto SECOND = 1.0;
 		int renderedFrames = 0;
@@ -38,31 +38,25 @@ namespace Venture {
 		while (m_window.ProcessMessages()) {
 			auto deltaTime = Time::NewDelta();
 
+			auto frameStartTime = Time::CurrentTime();
+
 			accumulatedTime += deltaTime;
 			secondTimer += deltaTime;
 
-			// Currently update and render every loop until the below issues are fixed.
-			Update();
-			Render();
+			// Handle Venture events
+			EventSystem::DispatchEvents();
 
 			// Update with fixed timestep
 			while (accumulatedTime >= TIME_PER_UPDATE) {
 				accumulatedTime-= TIME_PER_UPDATE;
-				//Update();
-
-				//Log::DebugPrintF(0, Log::Channel::General, "Test\n");
-
-				// TODO: Camera not moving if rendering within this loop for some reason
-
-
-				// Render every loop
-				//Render();
-				//renderedFrames++;
+				
+				// Update all gameobject components
+				Update();
 			}
-			// TODO: Mesh instances arent submitted every frame so objects flash if we render outside of the above loop
+
 			// Render every loop
-			//Render();
-			//renderedFrames++;
+			Render();
+			renderedFrames++;
 
 			
 			// Once a second has passed, update frames per second and reset variables
@@ -70,10 +64,21 @@ namespace Venture {
 				framesPerSecond = renderedFrames;
 				renderedFrames = 0;
 				secondTimer = 0;
+				Log::DebugPrintF(0, Log::Channel::General, "FPS: %f\n", framesPerSecond);
 			}
 		}
 		Shutdown();
 		return 0;
+	}
+
+	// Sleep at end of frame given frame start time to meet target FPS (not currently using this)
+	void Application::Sleep(double frameStartTime) {
+		// Sleep until next frame
+		double milliseconds = (frameStartTime + Time::FixedTimeStep() - Time::CurrentTime()) * 1000;
+
+		if (milliseconds > 0) {
+			Sleep(static_cast<DWORD>(milliseconds));
+		}
 	}
 
 	int Application::Init() {
@@ -102,8 +107,8 @@ namespace Venture {
 		return 0;
 	}
 	int Application::Update() {
-		// Handle Venture events
-		EventSystem::DispatchEvents();
+		// Clear renderables before new ones are submitted in updates
+		m_renderManager.Clear();
 
 		// Update all GameObjects
 		GameObject** gameObjects = GameObject::GetAllGameObjects();

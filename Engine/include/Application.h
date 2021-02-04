@@ -9,6 +9,7 @@ namespace Venture {
 		Window m_window;
 		RenderManager m_renderManager;
 		std::thread m_fileThread;
+		void Sleep(double frameStartTime);
 	public:
 		Application();
 		int Run();

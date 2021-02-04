@@ -5,15 +5,13 @@
 #include <utility> // for std::pair
 #include "Mesh.h"
 #include "Material.h"
-#include <queue>
+#include <vector>
 
 namespace Venture {
 	class RenderManager {
 	// TODO: Fix static/nonstatic i.e. refactor
 	private:
-		// TODO: Circular queue temporary data structure for submitting mesh/material pairs
-		//static CircularQueue<std::pair<Mesh*, Material*>> renderQueue;
-		static std::queue<std::pair<Mesh*, Material*>> renderQueue;
+		static std::vector<std::pair<Mesh*, Material*>> s_renderables;
 		Direct3DManager m_direct3DManager;
 		HWND m_window;
 		static DirectX::XMFLOAT4X4 m_viewTransform;
@@ -27,5 +25,7 @@ namespace Venture {
 		}
 		// Submit mesh/material pairs for draw call
 		static void Submit(Mesh*, Material*);
+		// Clear mesh/materials for next draw call
+		static void Clear();
 	};
 }
