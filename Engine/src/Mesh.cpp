@@ -2,7 +2,7 @@
 
 namespace Venture {
 	Mesh::Mesh(std::vector<Vertex> vertices, std::vector<int> indices) :
-		m_vertices(vertices), m_indices(indices), m_vertexBuffer(nullptr), m_indexBuffer(nullptr){}
+		m_vertices(vertices), m_indices(indices), m_vertexBuffer(nullptr), m_indexBuffer(nullptr) {}
 
 	void Mesh::CreateBuffers(ID3D11Device* device) {
 		// Create vertex buffer

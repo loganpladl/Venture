@@ -2,6 +2,7 @@
 #include "Vertex.h"
 #include <vector>
 #include <d3d11.h>
+#include<DirectXMath.h>
 
 namespace Venture {
 	class Mesh {

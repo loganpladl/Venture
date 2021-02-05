@@ -23,5 +23,8 @@ namespace Venture {
 		inline ComponentType GetType() { return m_type; }
 		inline bool IsType(ComponentType type) { return type == m_type; }
 		virtual void ReceiveEvents(Event event) {};
+		inline GameObject* GetGameObject() {
+			return m_parentObject;
+		}
 	};
 }

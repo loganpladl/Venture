@@ -2,7 +2,8 @@
 #include "Direct3DManager.h"
 #include <DirectXMath.h>
 #include "../include/CircularQueue.h"
-#include <utility> // for std::pair
+#include <utility>
+#include <tuple>
 #include "Mesh.h"
 #include "Material.h"
 #include <vector>
@@ -11,7 +12,7 @@ namespace Venture {
 	class RenderManager {
 	// TODO: Fix static/nonstatic i.e. refactor
 	private:
-		static std::vector<std::pair<Mesh*, Material*>> s_renderables;
+		static std::vector<std::tuple<Mesh*, Material*, DirectX::XMFLOAT4X4>> s_renderables;
 		Direct3DManager m_direct3DManager;
 		HWND m_window;
 		static DirectX::XMFLOAT4X4 m_viewTransform;
@@ -24,7 +25,7 @@ namespace Venture {
 			m_viewTransform = newTransform;
 		}
 		// Submit mesh/material pairs for draw call
-		static void Submit(Mesh*, Material*);
+		static void Submit(Mesh*, Material*, DirectX::XMFLOAT4X4 worldTransform);
 		// Clear mesh/materials for next draw call
 		static void Clear();
 	};

@@ -154,7 +154,7 @@ namespace Venture {
 		m_context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0u);
 	}
 
-	void Direct3DManager::DrawMeshMaterial(Mesh* mesh, Material* material) {
+	void Direct3DManager::DrawMeshMaterial(Mesh* mesh, Material* material, DirectX::XMFLOAT4X4 worldTransform) {
 		if (!mesh->IsLoaded()) {
 			mesh->CreateBuffers(m_device);
 		}
@@ -174,9 +174,10 @@ namespace Venture {
 
 		// Load view transform
 		DirectX::XMMATRIX view = DirectX::XMLoadFloat4x4(&m_viewTransform);
+		DirectX::XMMATRIX world = DirectX::XMLoadFloat4x4(&worldTransform);
 
 		DirectX::XMMATRIX mat = DirectX::XMMatrixTranspose(
-			DirectX::XMMatrixTranslation(0.0f, 0.0f, 4.0f) *
+			world *
 			view *
 			// TODO: Is there a slight distortion at the edges of the screen?
 			DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(70), 4.0f / 3.0f, 0.5f, 100.0f)
