@@ -133,6 +133,7 @@ namespace Venture {
 		DirectX::XMStoreFloat4x4(&m_projectionTransform, proj);
 		CreateConstBuffers();
 		UpdateConstBufferResizeData();
+		UpdateConstBufferResize();
 
 		return 0;
 	}
