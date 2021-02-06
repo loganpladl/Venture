@@ -194,20 +194,10 @@ namespace Venture {
 		UpdateConstBufferPerFrame();
 
 		// Input vertex layout
-		ID3D11InputLayout* pInputLayout;
-		const D3D11_INPUT_ELEMENT_DESC layout[] = {
-			{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			{"COLOR", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 12u, D3D11_INPUT_PER_VERTEX_DATA, 0}
-		};
-		m_device->CreateInputLayout(
-			layout, 
-			sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), 
-			material->GetVertexShader()->GetBytecode(), 
-			material->GetVertexShader()->GetBytecodeSize(),
-			&pInputLayout
-		);
-
-		m_context->IASetInputLayout(pInputLayout);
+		if (!material->IsInputLayoutLoaded()) {
+			material->CreateInputLayout(m_device);
+		}
+		material->BindInputLayout(m_context);
 
 		// Bind render target
 		// Note: Must repeat every frame since we're using DXGI_SWAP_EFFECT_FLIP_DISCARD
@@ -227,8 +217,6 @@ namespace Venture {
 
 		int numIndices = mesh->NumIndices();
 		m_context->DrawIndexed(numIndices, 0u, 0u);
-
-		pInputLayout->Release();
 	}
 
 	void Direct3DManager::UpdateViewTransform(DirectX::XMFLOAT4X4 newTransform) {

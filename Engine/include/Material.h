@@ -4,6 +4,7 @@
 #include <DirectXMath.h>
 #include <d3d11.h>
 #include "ConstantBufferPerObject.h"
+#include "InputLayout.h"
 
 namespace Venture {
 
@@ -24,10 +25,15 @@ namespace Venture {
 		void UpdateConstantBufferData(DirectX::XMFLOAT4X4 world);
 		// Do this immediately before draw call
 		void UpdateConstantBuffer(ID3D11DeviceContext* context);
+
+		bool IsInputLayoutLoaded();
+		void CreateInputLayout(ID3D11Device* device);
+		void BindInputLayout(ID3D11DeviceContext* context);
 	private:
 		VertexShader* m_vertexShader;
 		PixelShader* m_pixelShader;
 		DirectX::XMFLOAT4 m_color;
 		ConstantBufferPerObject m_constBuffer;
+		InputLayout m_inputLayout;
 	};
 }

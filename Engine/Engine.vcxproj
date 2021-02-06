@@ -165,6 +165,7 @@
     <ClCompile Include="src\FPSCamera.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\Input.cpp" />
+    <ClCompile Include="src\InputLayout.cpp" />
     <ClCompile Include="src\Keyboard.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\Material.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="include\FPSCamera.h" />
     <ClInclude Include="include\GameObject.h" />
     <ClInclude Include="include\Input.h" />
+    <ClInclude Include="include\InputLayout.h" />
     <ClInclude Include="include\Keyboard.h" />
     <ClInclude Include="include\KeyEvent.h" />
     <ClInclude Include="include\Log.h" />

@@ -3,11 +3,13 @@
 
 namespace Venture {
 	// Default constructor uses unlit shaders and pure white color
-	Material::Material() : m_vertexShader(DefaultShaders::VertexUnlit()), m_pixelShader(DefaultShaders::PixelUnlit()), m_color(1,1,1,1) {
+	Material::Material() : m_vertexShader(DefaultShaders::VertexUnlit()), m_pixelShader(DefaultShaders::PixelUnlit()), m_color(1,1,1,1), 
+		m_constBuffer(), m_inputLayout(InputLayout::VertexLayout1(), 2) {
 
 	}
 
-	Material::Material(DirectX::XMFLOAT4 color) : m_vertexShader(DefaultShaders::VertexUnlit()), m_pixelShader(DefaultShaders::PixelUnlit()), m_color(color) {
+	Material::Material(DirectX::XMFLOAT4 color) : m_vertexShader(DefaultShaders::VertexUnlit()), m_pixelShader(DefaultShaders::PixelUnlit()), m_color(color),
+		m_constBuffer(), m_inputLayout(InputLayout::VertexLayout1(), 2) {
 
 	}
 
@@ -51,5 +53,17 @@ namespace Venture {
 
 	void Material::UpdateConstantBuffer(ID3D11DeviceContext* context) {
 		m_constBuffer.Update(context);
+	}
+
+	bool Material::IsInputLayoutLoaded() {
+		return m_inputLayout.IsLoaded();
+	}
+
+	void Material::CreateInputLayout(ID3D11Device* device) {
+		m_inputLayout.Create(device, m_vertexShader);
+	}
+
+	void Material::BindInputLayout(ID3D11DeviceContext* context) {
+		m_inputLayout.Bind(context);
 	}
 }

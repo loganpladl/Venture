@@ -32,6 +32,8 @@ namespace Venture {
 			D3D11_BUFFER_DESC cbd;
 			cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 			// Can only use UpdateSubresource with D3D11_USAGE_DEFAULT
+			// TODO: I should probably use D3D11_USAGE_DYNAMIC with per object/frame constant buffers
+			// and update without UpdateSubresource?
 			cbd.Usage = D3D11_USAGE_DEFAULT;
 			//cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 			cbd.CPUAccessFlags = 0u;
