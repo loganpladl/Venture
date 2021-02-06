@@ -16,6 +16,7 @@ namespace Venture {
 		Direct3DManager m_direct3DManager;
 		HWND m_window;
 		static DirectX::XMFLOAT4X4 m_viewTransform;
+		static DirectX::XMFLOAT4X4 m_projectionTransform;
 	public:
 		RenderManager();
 		int Init(HWND window);
@@ -23,6 +24,9 @@ namespace Venture {
 		void Render();
 		static inline void UpdateViewTransform(DirectX::XMFLOAT4X4 newTransform) { 
 			m_viewTransform = newTransform;
+		}
+		static inline void UpdateProjectionTransform(DirectX::XMFLOAT4X4 newTransform) {
+			m_projectionTransform = newTransform;
 		}
 		// Submit mesh/material pairs for draw call
 		static void Submit(Mesh*, Material*, DirectX::XMFLOAT4X4 worldTransform);

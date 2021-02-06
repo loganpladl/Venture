@@ -21,6 +21,10 @@ namespace Venture {
 
 	void RenderManager::Render() {
 		m_direct3DManager.UpdateViewTransform(m_viewTransform);
+		// Update per frame const buffer
+		m_direct3DManager.UpdateConstBufferPerFrameData();
+
+		// Clear back buffer with black
 		m_direct3DManager.ClearBuffer(0.0f, 0.0f, 0.0f);
 
 		for (const std::tuple<Mesh*, Material*, DirectX::XMFLOAT4X4>& meshMaterial : s_renderables) {

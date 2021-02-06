@@ -4,6 +4,8 @@
 #include "Mesh.h"
 #include "Material.h"
 #include <DirectXMath.h>
+#include "ConstantBufferPerFrame.h"
+#include "ConstantBufferResize.h"
 
 namespace Venture {
 	class Direct3DManager {
@@ -17,6 +19,12 @@ namespace Venture {
 		void ClearBuffer(float red, float green, float blue);
 		void DrawMeshMaterial(Mesh* mesh, Material* material, DirectX::XMFLOAT4X4 worldTransform);
 		void UpdateViewTransform(DirectX::XMFLOAT4X4 newTransform);
+		void UpdateProjectionTransform(DirectX::XMFLOAT4X4 newTransform);
+
+		void UpdateConstBufferPerFrameData();
+		void UpdateConstBufferPerFrame();
+		void UpdateConstBufferResizeData();
+		void UpdateConstBufferResize();
 	private:
 		ID3D11Device* m_device = nullptr;
 		ID3D11DeviceContext* m_context = nullptr;
@@ -27,5 +35,14 @@ namespace Venture {
 		ID3D11RenderTargetView* m_renderTargetView = nullptr;
 		ID3D11DepthStencilView* m_depthStencilView = nullptr;
 		DirectX::XMFLOAT4X4 m_viewTransform;
+		DirectX::XMFLOAT4X4 m_projectionTransform;
+
+		ConstantBufferPerFrame m_constBufferPerFrame;
+		ConstantBufferResize m_constBufferResize;
+
+		// Bind per frame and per resize const buffers
+		void CreateConstBuffers();
+		void BindConstBuffers();
+		bool AreConstBuffersLoaded();
 	};
 }

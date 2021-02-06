@@ -32,4 +32,24 @@ namespace Venture {
 	PixelShader* Material::GetPixelShader() {
 		return m_pixelShader;
 	}
+
+	bool Material::IsConstantBufferLoaded() {
+		return m_constBuffer.IsLoaded();
+	}
+
+	void Material::CreateConstantBuffer(ID3D11Device* device) {
+		m_constBuffer.Create(device);
+	}
+
+	void Material::BindConstantBuffer(ID3D11DeviceContext* context) {
+		m_constBuffer.Bind(context);
+	}
+
+	void Material::UpdateConstantBufferData(DirectX::XMFLOAT4X4 world) {
+		m_constBuffer.UpdateData(world);
+	}
+
+	void Material::UpdateConstantBuffer(ID3D11DeviceContext* context) {
+		m_constBuffer.Update(context);
+	}
 }

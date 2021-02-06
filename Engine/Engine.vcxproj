@@ -150,6 +150,9 @@
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Buffer.cpp" />
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\ConstantBufferPerFrame.cpp" />
+    <ClCompile Include="src\ConstantBufferPerObject.cpp" />
+    <ClCompile Include="src\ConstantBufferResize.cpp" />
     <ClCompile Include="src\DefaultGameObjects.cpp" />
     <ClCompile Include="src\DefaultMaterials.cpp" />
     <ClCompile Include="src\DefaultMeshes.cpp" />
@@ -182,6 +185,10 @@
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\CircularQueue.h" />
     <ClInclude Include="include\Component.h" />
+    <ClInclude Include="include\ConstantBuffer.h" />
+    <ClInclude Include="include\ConstantBufferPerFrame.h" />
+    <ClInclude Include="include\ConstantBufferPerObject.h" />
+    <ClInclude Include="include\ConstantBufferResize.h" />
     <ClInclude Include="include\Cube.h" />
     <ClInclude Include="include\DefaultGameObjects.h" />
     <ClInclude Include="include\DefaultMaterials.h" />

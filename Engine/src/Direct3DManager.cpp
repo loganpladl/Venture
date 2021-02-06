@@ -12,7 +12,7 @@
 #include "../include/Time.h"
 
 namespace Venture {
-	Direct3DManager::Direct3DManager() : m_viewTransform() {
+	Direct3DManager::Direct3DManager() : m_viewTransform(), m_projectionTransform() {
 		m_featureLevel = D3D_FEATURE_LEVEL_11_1; //default
 		m_window = nullptr;
 	}
@@ -127,6 +127,13 @@ namespace Venture {
 		if (FAILED(result)) {
 			// Handle potential device creation failure
 		}
+
+		// TODO:: Default projection matrix, should create and update based on window dimensions
+		DirectX::XMMATRIX proj = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(70), 4.0f / 3.0f, 0.5f, 100.0f);
+		DirectX::XMStoreFloat4x4(&m_projectionTransform, proj);
+		CreateConstBuffers();
+		UpdateConstBufferResizeData();
+
 		return 0;
 	}
 	Direct3DManager::~Direct3DManager() {
@@ -165,40 +172,25 @@ namespace Venture {
 			material->CreateShaders(m_device);
 		}
 		material->BindShaders(m_context);
+		
+		// Create and bind constant buffer
+		if (!material->IsConstantBufferLoaded()) {
+			material->CreateConstantBuffer(m_device);
+		}
+		material->BindConstantBuffer(m_context);
 
-		// Constant buffer
-		struct ConstantBuffer {
-			DirectX::XMFLOAT4X4 transform;
-		};
-		ConstantBuffer cb;
+		// Update constant buffer with world transform of this object
+		material->UpdateConstantBufferData(worldTransform);
+		material->UpdateConstantBuffer(m_context);
 
-		// Load view transform
-		DirectX::XMMATRIX view = DirectX::XMLoadFloat4x4(&m_viewTransform);
-		DirectX::XMMATRIX world = DirectX::XMLoadFloat4x4(&worldTransform);
 
-		DirectX::XMMATRIX mat = DirectX::XMMatrixTranspose(
-			world *
-			view *
-			// TODO: Is there a slight distortion at the edges of the screen?
-			DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(70), 4.0f / 3.0f, 0.5f, 100.0f)
-		);
+		if (!AreConstBuffersLoaded()) {
+			CreateConstBuffers();
+		}
+		BindConstBuffers();
 
-		DirectX::XMStoreFloat4x4(&cb.transform, mat);
-
-		ID3D11Buffer* pConstBuffer;
-		D3D11_BUFFER_DESC cbd;
-		cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		cbd.Usage = D3D11_USAGE_DYNAMIC;
-		cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		cbd.MiscFlags = 0u;
-		cbd.ByteWidth = sizeof(cb);
-		cbd.StructureByteStride = 0u;
-		D3D11_SUBRESOURCE_DATA csd = {};
-		csd.pSysMem = &cb;
-		m_device->CreateBuffer(&cbd, &csd, &pConstBuffer);
-
-		// bind constant buffer to vertex shader
-		m_context->VSSetConstantBuffers(0u, 1u, &pConstBuffer);
+		UpdateConstBufferPerFrameData();
+		UpdateConstBufferPerFrame();
 
 		// Input vertex layout
 		ID3D11InputLayout* pInputLayout;
@@ -236,10 +228,41 @@ namespace Venture {
 		m_context->DrawIndexed(numIndices, 0u, 0u);
 
 		pInputLayout->Release();
-		pConstBuffer->Release();
 	}
 
 	void Direct3DManager::UpdateViewTransform(DirectX::XMFLOAT4X4 newTransform) {
 		m_viewTransform = newTransform;
+	}
+
+	void Direct3DManager::UpdateProjectionTransform(DirectX::XMFLOAT4X4 newTransform) {
+		m_projectionTransform = newTransform;
+	}
+
+	void Direct3DManager::UpdateConstBufferPerFrame() {
+		m_constBufferPerFrame.Update(m_context);
+	}
+
+	void Direct3DManager::UpdateConstBufferResize() {
+		m_constBufferResize.Update(m_context);
+	}
+
+	void Direct3DManager::UpdateConstBufferPerFrameData() {
+		m_constBufferPerFrame.UpdateData(m_viewTransform);
+	}
+
+	void Direct3DManager::UpdateConstBufferResizeData() {
+		m_constBufferResize.UpdateData(m_projectionTransform);
+	}
+
+	void Direct3DManager::CreateConstBuffers() {
+		m_constBufferPerFrame.Create(m_device);
+		m_constBufferResize.Create(m_device);
+	}
+	void Direct3DManager::BindConstBuffers() {
+		m_constBufferPerFrame.Bind(m_context);
+		m_constBufferResize.Bind(m_context);
+	}
+	bool Direct3DManager::AreConstBuffersLoaded() {
+		return m_constBufferPerFrame.IsLoaded() && m_constBufferResize.IsLoaded();
 	}
 }
