@@ -12,7 +12,7 @@
 #include "../include/Time.h"
 
 namespace Venture {
-	Direct3DManager::Direct3DManager() : m_viewTransform(), m_projectionTransform() {
+	Direct3DManager::Direct3DManager() : m_viewTransform(), m_projectionTransform(), m_viewport() {
 		m_featureLevel = D3D_FEATURE_LEVEL_11_1; //default
 		m_window = nullptr;
 	}
@@ -135,6 +135,16 @@ namespace Venture {
 		UpdateConstBufferResizeData();
 		UpdateConstBufferResize();
 
+		// Default viewport configuration
+		// TODO: Should depend on current window size and should update on resizing
+		m_viewport.Width = 640;
+		m_viewport.Height = 480;
+		m_viewport.MinDepth = 0;
+		m_viewport.MaxDepth = 1;
+		m_viewport.TopLeftX = 0;
+		m_viewport.TopLeftY = 0;
+		m_context->RSSetViewports(1u, &m_viewport);
+
 		return 0;
 	}
 	Direct3DManager::~Direct3DManager() {
@@ -193,7 +203,7 @@ namespace Venture {
 		UpdateConstBufferPerFrameData();
 		UpdateConstBufferPerFrame();
 
-		// Input vertex layout
+		// Create and bind input vertex layout
 		if (!material->IsInputLayoutLoaded()) {
 			material->CreateInputLayout(m_device);
 		}
@@ -203,16 +213,7 @@ namespace Venture {
 		// Note: Must repeat every frame since we're using DXGI_SWAP_EFFECT_FLIP_DISCARD
 		m_context->OMSetRenderTargets(1u, &m_renderTargetView, m_depthStencilView);
 
-		// Viewport configuration
-		D3D11_VIEWPORT vp;
-		vp.Width = 640;
-		vp.Height = 480;
-		vp.MinDepth = 0;
-		vp.MaxDepth = 1;
-		vp.TopLeftX = 0;
-		vp.TopLeftY = 0;
-		m_context->RSSetViewports(1u, &vp);
-
+		// Only using trianglelist topology
 		m_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		int numIndices = mesh->NumIndices();

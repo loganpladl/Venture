@@ -40,6 +40,8 @@ namespace Venture {
 		ConstantBufferPerFrame m_constBufferPerFrame;
 		ConstantBufferResize m_constBufferResize;
 
+		D3D11_VIEWPORT m_viewport;
+
 		// Bind per frame and per resize const buffers
 		void CreateConstBuffers();
 		void BindConstBuffers();
