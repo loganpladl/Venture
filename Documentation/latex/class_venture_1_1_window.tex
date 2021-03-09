@@ -1,0 +1,89 @@
+\hypertarget{class_venture_1_1_window}{}\doxysection{Venture\+::Window Class Reference}
+\label{class_venture_1_1_window}\index{Venture::Window@{Venture::Window}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_venture_1_1_window_ac76cd7eb1cab4d4a2561c2f84965fe00}{Window}} ()
+\item 
+\mbox{\hyperlink{class_venture_1_1_window_abc866d055273179a1a74b365c390ff18}{$\sim$\+Window}} ()
+\item 
+void \mbox{\hyperlink{class_venture_1_1_window_aebef265f17afdb60af02832e81f002d8}{Destroy}} ()
+\item 
+LRESULT CALLBACK \mbox{\hyperlink{class_venture_1_1_window_a7c68f9af07dbc20829b71bf5849b4055}{Window\+Callback}} (HWND window, UINT msg, WPARAM w\+Param, LPARAM l\+Param)
+\item 
+\mbox{\Hypertarget{class_venture_1_1_window_ae6e5e3cd5037ec3047e4897a256b5c2a}\label{class_venture_1_1_window_ae6e5e3cd5037ec3047e4897a256b5c2a}} 
+HWND {\bfseries Get\+Handle} ()
+\item 
+\mbox{\Hypertarget{class_venture_1_1_window_ad766edfd3913941a26f34ec00ce33967}\label{class_venture_1_1_window_ad766edfd3913941a26f34ec00ce33967}} 
+bool {\bfseries Process\+Messages} ()
+\item 
+\mbox{\Hypertarget{class_venture_1_1_window_a68f680a69d65069baabd3053fb3ccb20}\label{class_venture_1_1_window_a68f680a69d65069baabd3053fb3ccb20}} 
+void {\bfseries Gain\+Focus} ()
+\item 
+\mbox{\Hypertarget{class_venture_1_1_window_ab3db49eeb2daef124b7baa0079db0e44}\label{class_venture_1_1_window_ab3db49eeb2daef124b7baa0079db0e44}} 
+void {\bfseries Lose\+Focus} ()
+\item 
+\mbox{\Hypertarget{class_venture_1_1_window_a77150a61cf22b3c3efad99f6cd979588}\label{class_venture_1_1_window_a77150a61cf22b3c3efad99f6cd979588}} 
+void {\bfseries Confine\+Cursor} ()
+\item 
+\mbox{\Hypertarget{class_venture_1_1_window_a08ef72b419a32b2e9873ad0c8b75d9a9}\label{class_venture_1_1_window_a08ef72b419a32b2e9873ad0c8b75d9a9}} 
+void {\bfseries Free\+Cursor} ()
+\item 
+\mbox{\Hypertarget{class_venture_1_1_window_a9ff1835c4e5a8838979ed67a4eba7e3e}\label{class_venture_1_1_window_a9ff1835c4e5a8838979ed67a4eba7e3e}} 
+void {\bfseries Resize\+Clip\+Rect} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static LRESULT CALLBACK \mbox{\hyperlink{class_venture_1_1_window_a8988ac7cfad2c89ba3223590636ca2f1}{Window\+Callback\+Setup}} (HWND window, UINT msg, WPARAM w\+Param, LPARAM l\+Param)
+\item 
+static LRESULT CALLBACK \mbox{\hyperlink{class_venture_1_1_window_a5e791e329451758e11e0a7680b486251}{Window\+Callback\+Static}} (HWND window, UINT msg, WPARAM w\+Param, LPARAM l\+Param)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_venture_1_1_window_ac76cd7eb1cab4d4a2561c2f84965fe00}\label{class_venture_1_1_window_ac76cd7eb1cab4d4a2561c2f84965fe00}} 
+\index{Venture::Window@{Venture::Window}!Window@{Window}}
+\index{Window@{Window}!Venture::Window@{Venture::Window}}
+\doxysubsubsection{\texorpdfstring{Window()}{Window()}}
+{\footnotesize\ttfamily Venture\+::\+Window\+::\+Window (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Create window using Windows API. \mbox{\Hypertarget{class_venture_1_1_window_abc866d055273179a1a74b365c390ff18}\label{class_venture_1_1_window_abc866d055273179a1a74b365c390ff18}} 
+\index{Venture::Window@{Venture::Window}!````~Window@{$\sim$Window}}
+\index{````~Window@{$\sim$Window}!Venture::Window@{Venture::Window}}
+\doxysubsubsection{\texorpdfstring{$\sim$Window()}{~Window()}}
+{\footnotesize\ttfamily Venture\+::\+Window\+::$\sim$\+Window (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Calls \mbox{\hyperlink{class_venture_1_1_window_aebef265f17afdb60af02832e81f002d8}{Destroy()}}. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_venture_1_1_window_aebef265f17afdb60af02832e81f002d8}\label{class_venture_1_1_window_aebef265f17afdb60af02832e81f002d8}} 
+\index{Venture::Window@{Venture::Window}!Destroy@{Destroy}}
+\index{Destroy@{Destroy}!Venture::Window@{Venture::Window}}
+\doxysubsubsection{\texorpdfstring{Destroy()}{Destroy()}}
+{\footnotesize\ttfamily void Venture\+::\+Window\+::\+Destroy (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Deallocate window and associated objects when the user closes the window. \mbox{\Hypertarget{class_venture_1_1_window_a7c68f9af07dbc20829b71bf5849b4055}\label{class_venture_1_1_window_a7c68f9af07dbc20829b71bf5849b4055}} 
+\index{Venture::Window@{Venture::Window}!WindowCallback@{WindowCallback}}
+\index{WindowCallback@{WindowCallback}!Venture::Window@{Venture::Window}}
+\doxysubsubsection{\texorpdfstring{WindowCallback()}{WindowCallback()}}
+{\footnotesize\ttfamily LRESULT CALLBACK Venture\+::\+Window\+::\+Window\+Callback (\begin{DoxyParamCaption}\item[{HWND}]{window,  }\item[{UINT}]{msg,  }\item[{WPARAM}]{w\+Param,  }\item[{LPARAM}]{l\+Param }\end{DoxyParamCaption})}
+
+Primary callback function which handles windows events. \mbox{\Hypertarget{class_venture_1_1_window_a8988ac7cfad2c89ba3223590636ca2f1}\label{class_venture_1_1_window_a8988ac7cfad2c89ba3223590636ca2f1}} 
+\index{Venture::Window@{Venture::Window}!WindowCallbackSetup@{WindowCallbackSetup}}
+\index{WindowCallbackSetup@{WindowCallbackSetup}!Venture::Window@{Venture::Window}}
+\doxysubsubsection{\texorpdfstring{WindowCallbackSetup()}{WindowCallbackSetup()}}
+{\footnotesize\ttfamily LRESULT CALLBACK Venture\+::\+Window\+::\+Window\+Callback\+Setup (\begin{DoxyParamCaption}\item[{HWND}]{window,  }\item[{UINT}]{msg,  }\item[{WPARAM}]{w\+Param,  }\item[{LPARAM}]{l\+Param }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Initial window callback which stores our \mbox{\hyperlink{class_venture_1_1_window}{Window}} instance on the OS side. \mbox{\Hypertarget{class_venture_1_1_window_a5e791e329451758e11e0a7680b486251}\label{class_venture_1_1_window_a5e791e329451758e11e0a7680b486251}} 
+\index{Venture::Window@{Venture::Window}!WindowCallbackStatic@{WindowCallbackStatic}}
+\index{WindowCallbackStatic@{WindowCallbackStatic}!Venture::Window@{Venture::Window}}
+\doxysubsubsection{\texorpdfstring{WindowCallbackStatic()}{WindowCallbackStatic()}}
+{\footnotesize\ttfamily LRESULT CALLBACK Venture\+::\+Window\+::\+Window\+Callback\+Static (\begin{DoxyParamCaption}\item[{HWND}]{window,  }\item[{UINT}]{msg,  }\item[{WPARAM}]{w\+Param,  }\item[{LPARAM}]{l\+Param }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Immediately calls \mbox{\hyperlink{class_venture_1_1_window_a7c68f9af07dbc20829b71bf5849b4055}{Window\+Callback()}} using \mbox{\hyperlink{class_venture_1_1_window}{Window}} instance stored on the OS side. Exists only because Windows API requires a static callback. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Development/\+Venture/\+Engine/include/Window.\+h\item 
+E\+:/\+Development/\+Venture/\+Engine/src/Window.\+cpp\end{DoxyCompactItemize}

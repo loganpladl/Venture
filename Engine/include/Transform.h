@@ -9,6 +9,9 @@ namespace Venture {
 		Transform(GameObject* parent) : Component(ComponentType::Transform, parent),
 			m_position(0,0,0), m_rotation(1,0,0,0), m_scale(1,1,1) {
 		}
+		Transform(GameObject* parent, DirectX::XMFLOAT3 position) : Component(ComponentType::Transform, parent),
+			m_position(position), m_rotation(1, 0, 0, 0), m_scale(1, 1, 1) {
+		}
 		void Update() {}
 		void EarlyUpdate() {}
 		void LateUpdate() {}

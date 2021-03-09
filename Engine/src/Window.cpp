@@ -5,10 +5,8 @@
 namespace Venture {
 	Window::Window() : 
 		m_instance(GetModuleHandle(NULL)), m_windowClassName(L"VentureWindowClass"),
-		m_window(NULL), m_width(640), m_height(480), m_windowHasFocus(false), m_mouseConfined(false), m_windowRect() {
-	}
-
-	int Window::Init() {
+		m_windowHandle(NULL), m_width(640), m_height(480), m_windowHasFocus(false), m_mouseConfined(false), m_windowRect() 
+	{
 		// Game Icon
 		HICON icon = NULL;
 		WCHAR exePath[MAX_PATH];
@@ -36,24 +34,21 @@ namespace Venture {
 			// Registering window class failed
 			DWORD error = GetLastError();
 			if (error != ERROR_CLASS_ALREADY_EXISTS) {
-				return HRESULT_FROM_WIN32(error);
+				//return HRESULT_FROM_WIN32(error);
+				// TODO: Throw exception
 			}
 		}
 
-		return 0;
-	}
-
-	int Window::Create() {
 		RECT rect;
 		int x = CW_USEDEFAULT;
 		int y = CW_USEDEFAULT;
 
 		// No menu for now.
-		
+
 		SetRect(&rect, 0, 0, m_width, m_height);
 		AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
 
-		m_window = CreateWindowEx(
+		m_windowHandle = CreateWindowEx(
 			0,
 			m_windowClassName,
 			L"Venture",
@@ -67,9 +62,10 @@ namespace Venture {
 			this // pointer to window instance so we can retrieve member function callback
 		);
 
-		if (m_window == NULL) {
+		if (m_windowHandle == NULL) {
 			DWORD error = GetLastError();
-			return HRESULT_FROM_WIN32(error);
+			//return HRESULT_FROM_WIN32(error);
+			// TODO: Throw exception
 		}
 
 		//GetWindowRect(m_window, &m_windowRect);
@@ -81,11 +77,9 @@ namespace Venture {
 		Rid[0].usUsage = HID_USAGE_GENERIC_MOUSE;
 		//Rid[0].dwFlags = RIDEV_INPUTSINK;
 		Rid[0].dwFlags = 0;
-		Rid[0].hwndTarget = m_window;
+		Rid[0].hwndTarget = m_windowHandle;
 		RegisterRawInputDevices(Rid, 1, sizeof(Rid[0]));
 		// TODO: Check for failure
-
-		return 0;
 	}
 
 	LRESULT CALLBACK Window::WindowCallbackSetup(
@@ -326,25 +320,25 @@ namespace Venture {
 		return result;
 	}
 
-	int Window::Destroy() {
+	void Window::Destroy()
+	{
 		HMENU menu;
-		menu = GetMenu(m_window);
+		menu = GetMenu(m_windowHandle);
 		if (menu != NULL) {
 			DestroyMenu(menu);
 		}
-		DestroyWindow(m_window);
+		DestroyWindow(m_windowHandle);
 		// Unregister window class
 		UnregisterClass(m_windowClassName, m_instance);
-		// Success
-		return 0;
 	}
 
-	Window::~Window() {
+	Window::~Window()
+	{
 		Destroy();
 	}
 
 	HWND Window::GetHandle() {
-		return m_window;
+		return m_windowHandle;
 	}
 
 	// Return true to continue program execution, false to quit
@@ -388,12 +382,12 @@ namespace Venture {
 
 	void Window::ResizeClipRect() {
 		// Rect in client coordinates starting at zero
-		GetClientRect(m_window, &m_windowRect);
+		GetClientRect(m_windowHandle, &m_windowRect);
 		// Convert to screen coordinates
 		POINT topLeft{ m_windowRect.left, m_windowRect.top };
 		POINT bottomRight{ m_windowRect.right, m_windowRect.bottom };
-		ClientToScreen(m_window, &topLeft);
-		ClientToScreen(m_window, &bottomRight);
+		ClientToScreen(m_windowHandle, &topLeft);
+		ClientToScreen(m_windowHandle, &bottomRight);
 		m_windowRect.left = topLeft.x;
 		m_windowRect.top = topLeft.y;
 		m_windowRect.right = bottomRight.x;

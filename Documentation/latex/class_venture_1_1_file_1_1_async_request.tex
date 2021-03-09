@@ -1,0 +1,49 @@
+\hypertarget{class_venture_1_1_file_1_1_async_request}{}\doxysection{Venture\+::File\+::Async\+Request Class Reference}
+\label{class_venture_1_1_file_1_1_async_request}\index{Venture::File::AsyncRequest@{Venture::File::AsyncRequest}}
+Inheritance diagram for Venture\+::File\+::Async\+Request\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=0.691358cm]{class_venture_1_1_file_1_1_async_request}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_venture_1_1_file_1_1_async_request_a15418736a9942578e3e4d91ad99c24d0}\label{class_venture_1_1_file_1_1_async_request_a15418736a9942578e3e4d91ad99c24d0}} 
+virtual Async\+Request\+Type {\bfseries Get\+Type} ()
+\item 
+\mbox{\Hypertarget{class_venture_1_1_file_1_1_async_request_a3440e1af3d5ce8b7cd8880c4259749d0}\label{class_venture_1_1_file_1_1_async_request_a3440e1af3d5ce8b7cd8880c4259749d0}} 
+virtual int {\bfseries Process\+Request} ()=0
+\item 
+\mbox{\Hypertarget{class_venture_1_1_file_1_1_async_request_a354900de16caf923c112fbf63e4b026c}\label{class_venture_1_1_file_1_1_async_request_a354900de16caf923c112fbf63e4b026c}} 
+void {\bfseries Callback} ()
+\item 
+\mbox{\Hypertarget{class_venture_1_1_file_1_1_async_request_acd11bdac64c94128a3400634ec91111b}\label{class_venture_1_1_file_1_1_async_request_acd11bdac64c94128a3400634ec91111b}} 
+void {\bfseries Signal} ()
+\item 
+\mbox{\Hypertarget{class_venture_1_1_file_1_1_async_request_a4dd57c5f76e9d968debae414b5bd4af6}\label{class_venture_1_1_file_1_1_async_request_a4dd57c5f76e9d968debae414b5bd4af6}} 
+void {\bfseries Wait} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_venture_1_1_file_1_1_async_request_abd799243ec941b9b480b26c06f120f06}\label{class_venture_1_1_file_1_1_async_request_abd799243ec941b9b480b26c06f120f06}} 
+{\bfseries Async\+Request} (Async\+Request\+Type type, void($\ast$callback)())
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_venture_1_1_file_1_1_async_request_ae85ca72ae70407607e7c6d4e7f9f2b97}\label{class_venture_1_1_file_1_1_async_request_ae85ca72ae70407607e7c6d4e7f9f2b97}} 
+Async\+Request\+Type {\bfseries m\+\_\+type}
+\item 
+\mbox{\Hypertarget{class_venture_1_1_file_1_1_async_request_ae02435546bc7080494cfc7c18138c0fb}\label{class_venture_1_1_file_1_1_async_request_ae02435546bc7080494cfc7c18138c0fb}} 
+void($\ast$ {\bfseries m\+\_\+callback} )()
+\item 
+\mbox{\Hypertarget{class_venture_1_1_file_1_1_async_request_afbe52cc49a65c3eacd7fbc94ac81ff6b}\label{class_venture_1_1_file_1_1_async_request_afbe52cc49a65c3eacd7fbc94ac81ff6b}} 
+\mbox{\hyperlink{class_venture_1_1_semaphore}{Semaphore}} {\bfseries sem} \{0\}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Development/\+Venture/\+Engine/include/File.\+h\end{DoxyCompactItemize}

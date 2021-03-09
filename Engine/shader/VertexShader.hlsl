@@ -5,6 +5,7 @@ struct VertexOut {
 
 cbuffer cbPerObject : register(b0) {
 	matrix world;
+	float4 color;
 };
 
 cbuffer cbPerFrame : register(b1) {

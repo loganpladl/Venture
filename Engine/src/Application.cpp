@@ -12,9 +12,22 @@
 
 
 namespace Venture {
-	Application::Application() : m_window(){
-		m_window.Init();
-		m_window.Create();
+	Application::Application() : m_window()
+	{
+		// Create thread for asynchronous file IO
+		m_fileThread = std::thread(FileSystem::ProcessRequests);
+
+		Venture::Log::SetVerbosity(0);
+		Venture::Log::openLogFiles();
+		Input::Init();
+		Time::Init();
+
+		//Create camera
+		DefaultGameObjects::GetNewFPSCamera();
+		//Create cube
+		DefaultGameObjects::GetNewCube();
+
+		m_renderManager.Init(m_window.GetHandle());
 	}
 
 	int Application::Run() {
@@ -37,8 +50,8 @@ namespace Venture {
 
 		while (m_window.ProcessMessages()) {
 			auto deltaTime = Time::NewDelta();
-
-			auto frameStartTime = Time::CurrentTime();
+			
+			auto frameStartTime = Time::CurrentTime(); // Not currently using this. Can use to sleep until next frame.
 
 			accumulatedTime += deltaTime;
 			secondTimer += deltaTime;
@@ -82,20 +95,6 @@ namespace Venture {
 	}
 
 	int Application::Init() {
-		// Create thread for asynchronous file IO
-		m_fileThread = std::thread(FileSystem::ProcessRequests);
-
-		Venture::Log::SetVerbosity(0);
-		Venture::Log::openLogFiles();
-		Input::Init();
-		Time::Init();
-
-		//Create camera
-		DefaultGameObjects::GetNewFPSCamera();
-		//Create cube
-		DefaultGameObjects::GetNewCube();
-
-		m_renderManager.Init(m_window.GetHandle());
 		return 0;
 	}
 
@@ -111,6 +110,7 @@ namespace Venture {
 		m_renderManager.Clear();
 
 		// Update all GameObjects
+		// TODO: Faster to store struct of arrays of components and update components of same type sequentially.
 		GameObject** gameObjects = GameObject::GetAllGameObjects();
 		int maxGameObjects = GameObject::GetMaxGameObjects();
 		for (int i = 0; i < maxGameObjects; i++) {
