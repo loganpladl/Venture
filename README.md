@@ -1,5 +1,5 @@
 # Venture
-Venture Engine is a simple work-in-progress 3D game engine made for learning purposes.
+Venture Engine is a simple 3D game engine made for learning purposes. At the moment it only really contains several low-level subsystems.
 
 ## Created with:
 	* Direct3D 11 and DirectXMath
